@@ -1,0 +1,24 @@
+html, body {
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  image-rendering: pixelated;
+  background: black;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+}
+
+canvas {
+  width: 100vw;
+  height: calc(100vw * (180 / 320));
+  background: blue;
+}
+
+@font-face {
+  font-family: fontRetroGaming;
+  src: url("/fonts/Retro Gaming.tff");
+}
