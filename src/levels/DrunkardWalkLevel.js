@@ -30,45 +30,60 @@ export class DrunkardWalkLevel extends Level {
 		super();
 		try {
 
-		this.params = params;
-		this.background = new Sprite({
-			resource: resources.images.shopBackground,
-			frameSize: new Vector2(320, 180)
-		});
+			this.params = params;
+			this.background = new Sprite({
+				resource: resources.images.shopBackground,
+				frameSize: new Vector2(320, 180)
+			});
 
-		const floorPlan = this.buildFloorPlan(params);
-		this.seed = params.seed;
+			this.gameObjects = [];
+			this.floors = [];
 
-		console.log("START this.addFloorSprites")
-		this.addFloorSprites(floorPlan, params);
-		console.log("END this.addFloorSprites")
+			this.seed = params.seed ?? Math.seed(Math.random());
+			params.seed = this.seed;
+			const floorPlan = this.buildFloorPlan(params);
+			this.floorPlan = floorPlan;
+
+			console.log("START this.addFloorSprites")
+			this.addFloorSprites(floorPlan, params);
+			console.log("END this.addFloorSprites")
 
 
-		this.drunkWalkExitPosition = this.findFirstPosition(floorPlan);
-		this.addChild(new Exit(this.drunkWalkExitPosition.x, this.drunkWalkExitPosition.y));
+			this.drunkWalkExitPosition = this.findFirstPosition(floorPlan);
+			this.addGameObject(new Exit(this.drunkWalkExitPosition.x, this.drunkWalkExitPosition.y));
 
-		const heroStart = params.heroPosition ?? this.findHighestPosition(floorPlan);
+			const heroStart = params.heroPosition ?? this.findHighestPosition(floorPlan);
 
-		this.caveExitPosition = heroStart.duplicate();
-		this.caveExitPosition.x += gridCells(1);
-		this.addChild(new Exit(this.caveExitPosition.x, this.caveExitPosition.y));
+			this.caveExitPosition = heroStart.duplicate();
+			this.caveExitPosition.x += gridCells(1);
+			this.addGameObject(new Exit(this.caveExitPosition.x, this.caveExitPosition.y));
 
-		const hero = new Hero(heroStart.x, heroStart.y);
-		this.addChild(hero);
-		
-		console.log("START this.addTrimSprites")
-		this.addTrimSprites(floorPlan, params);
-		console.log("END this.addTrimSprites")
-		console.log("START this.addWallSprites")
-		this.addWallSprites(floorPlan, params);
-		console.log("END this.addWallSprites")
+			const hero = new Hero(heroStart.x, heroStart.y);
+			this.addGameObject(hero);
+			
+			console.log("START this.addTrimSprites")
+			this.addTrimSprites(floorPlan, params);
+			console.log("END this.addTrimSprites")
+			console.log("START this.addWallSprites")
+			this.addWallSprites(floorPlan, params);
+			console.log("END this.addWallSprites")
 
-		console.log("START this.getWalls");
-		this.walls = this.getWalls(floorPlan);
-		console.log("END this.getWalls");
-	} catch (e) {
-		console.error(e);	
+			console.log("START this.getWalls");
+			this.walls = this.getWalls(floorPlan);
+			console.log("END this.getWalls");
+		} catch (e) {
+			console.error(e);	
+		}
 	}
+
+	addGameObject(gameObject) {
+		this.gameObjects.push(gameObject);
+		this.addChild(gameObject);
+	}
+
+	addFloor(floor) {
+		this.floors.push(floor);
+		this.addChild(floor);
 	}
 
 	findFirstPosition(floorPlan) {
@@ -121,7 +136,7 @@ export class DrunkardWalkLevel extends Level {
 			seed: params.seed
 		});
 		for (var i = floors.length - 1; i >= 0; i--) {
-			this.addChild(floors[i]);
+			this.addFloor(floors[i]);
 		}
 	}
 
@@ -151,15 +166,23 @@ export class DrunkardWalkLevel extends Level {
 	ready() {
 		events.on("HERO_EXIT", this, (exit) => {
 			if (exit.position.matches(this.caveExitPosition)) {
-				events.emit("CHANGE_LEVEL", new CaveLevel1({
-					heroPosition: new Vector2(gridCells(4), gridCells(4))
-				}))
+				events.emit("CHANGE_LEVEL", this.getHome())
 			}
 			if (exit.position.matches(this.drunkWalkExitPosition)) {
-				events.emit("CHANGE_LEVEL", new DrunkardWalkLevel({
-					seed: Math.seed(Math.random())
-				}));	
+				events.emit("CHANGE_LEVEL", this.getNextLevel());	
 			}
+		});
+	}
+
+	getHome() {
+		return new CaveLevel1({
+			heroPosition: new Vector2(gridCells(4), gridCells(4))
+		});
+	}
+
+	getNextLevel() {
+		return new DrunkardWalkLevel({
+			seed: Math.seed(Math.random())
 		});
 	}
 }

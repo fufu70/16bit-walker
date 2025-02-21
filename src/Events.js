@@ -4,6 +4,7 @@ class Events {
 
 	// emit events 
 	emit(eventName, value) {
+		// console.log(eventName, value);
 		this.callbacks.forEach((stored) => {
 			if (stored.eventName === eventName) {
 				stored.callback(value);

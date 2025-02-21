@@ -12,12 +12,14 @@ import {Rod} from '../objects/rod/Rod.js';
 import {Exit} from '../objects/exit/Exit.js';
 import {CaveLevel1} from './CaveLevel1.js';
 import {AssetLevel} from './AssetLevel.js';
+import {QuestionsLevel} from './QuestionsLevel.js';
 
 
 const DEFAULT_HERO_POSITION = new Vector2(gridCells(6), gridCells(5));
 const CAVE_EXIT = new Vector2(gridCells(6), gridCells(3));
 const MODERN_INTERIOR_EXIT = new Vector2(gridCells(11), gridCells(2));
 const INTERIOR_EXIT = new Vector2(gridCells(14), gridCells(3));
+const QUESTIONS_EXIT = new Vector2(gridCells(3), gridCells(6));
 
 
 export class OutdoorLevel1 extends Level {
@@ -41,6 +43,7 @@ export class OutdoorLevel1 extends Level {
 		this.addChild(new Exit(CAVE_EXIT.x, CAVE_EXIT.y));
 		this.addChild(new Exit(MODERN_INTERIOR_EXIT.x, MODERN_INTERIOR_EXIT.y));
 		this.addChild(new Exit(INTERIOR_EXIT.x, INTERIOR_EXIT.y));
+		this.addChild(new Exit(QUESTIONS_EXIT.x, QUESTIONS_EXIT.y));
 
 		const heroStart = params.heroPosition ?? DEFAULT_HERO_POSITION;
 
@@ -61,17 +64,16 @@ export class OutdoorLevel1 extends Level {
 
 
 	ready() {
-		events.on("HERO_EXIT", this, () => {
-			events.emit("CHANGE_LEVEL", new CaveLevel1({
-				heroPosition: new Vector2(gridCells(4), gridCells(5))
-			}))
-		});
-
 		events.on("HERO_EXIT", this, (exit) => {
 			if (exit.position.matches(CAVE_EXIT)) {
-			events.emit("CHANGE_LEVEL", new CaveLevel1({
-				heroPosition: new Vector2(gridCells(4), gridCells(5))
-			}))
+				events.emit("CHANGE_LEVEL", new CaveLevel1({
+					heroPosition: new Vector2(gridCells(4), gridCells(5))
+				}))
+			}
+			if (exit.position.matches(QUESTIONS_EXIT)) {
+				events.emit("CHANGE_LEVEL", new QuestionsLevel({
+					seed: Math.seed(Math.random())
+				}));
 			}
 			if (exit.position.matches(MODERN_INTERIOR_EXIT)) {
 				events.emit("CHANGE_LEVEL", new AssetLevel({

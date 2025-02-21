@@ -57,17 +57,42 @@ export class Main extends GameObject {
 			});
 		});
 
+		events.on("SHOW_TEXTBOX", this, (content) => {
+
+			// Potentially add a story flag
+ 
+			if (content.addFlags) {
+				console.log("Add FLAG", content.addFlags);
+				storyFlags.add(content.addFlags);
+			}
+
+			const textbox = new SpriteTextString({
+				portraitFrame: content.portraitFrame,
+				string: content.string
+			});
+
+			this.addChild(textbox);
+
+			const endingSub = events.on("END_TEXT_BOX", this, () => {
+				textbox.destroy();
+				events.off(endingSub);
+				if (typeof content.onEnd === "function") {
+					content.onEnd();
+				}
+			});
+		});
+
 		events.on("CHANGE_LEVEL", this, newLevelInstance => {
 			this.setLevel(newLevelInstance);
 		});
 
 		events.on("TEXT_INPUT", this, config => {
-			const textInput = new SelectInput(config);
-			// const textInput = new TextInput(config);
+			// const textInput = new SelectInput(config);
+			const textInput = new TextInput(config);
 			this.addChild(textInput);
 
 			const endingDecideSub = events.on("DECIDE_INPUT_TEXT", this, (text) => {
-				console.log("His name is:", text);
+				events.emit("SUBMIT_INPUT_TEXT", text);
 				textInput.destroy();
 				events.off(endingDecideSub);
 			});
@@ -81,11 +106,10 @@ export class Main extends GameObject {
 
 		events.on("SELECT_INPUT", this, config => {
 			const textInput = new SelectInput(config);
-			// const textInput = new TextInput(config);
 			this.addChild(textInput);
 
 			const endingDecideSub = events.on("DECIDE_INPUT_TEXT", this, (text) => {
-				console.log("His name is:", text);
+				events.emit("SUBMIT_INPUT_TEXT", text);
 				textInput.destroy();
 				events.off(endingDecideSub);
 			});
