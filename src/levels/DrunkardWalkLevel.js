@@ -72,6 +72,9 @@ export class DrunkardWalkLevel extends Level {
 			console.log("START this.addVases");
 			this.addVases(floorPlan, params);
 			console.log("END this.addVases");
+			console.log("START this.addPictures");
+			this.addPictures(floorPlan, params);
+			console.log("END this.addPictures");
 
 			console.log("START this.getWalls");
 			this.walls = this.getWalls(this.walls, floorPlan);
