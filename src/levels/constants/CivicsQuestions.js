@@ -4,7 +4,7 @@ export const PRINCIPLES_OF_AMERICAN_DEMOCRACY = [
 			string: "What is the supreme law of the land?"
 		},
 		inputType: "TEXT_INPUT",
-		answers: ["the Constitution"]
+		 answers: ["the Constitution"]
 	},
 	{
 		config: {

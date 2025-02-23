@@ -9,7 +9,12 @@ import {events} from '../Events.js';
 export class QuestionsLevel extends DrunkardWalkLevel {
 	constructor(params={}) {
 		try {
-			super(params);
+			super({
+				...params,
+				width: 40,
+				height: 40,
+				maxSteps: 30,
+			});
 			this.questionsList = [...QUESTIONS];
 			this.placeQuestionRod(this.findRandomSpot(this.seed, this.floors, this.gameObjects));
 
@@ -39,13 +44,14 @@ export class QuestionsLevel extends DrunkardWalkLevel {
 
 	placeQuestionRod(vector) {
 		const question = this.getQuestion();
-
-		this.addChild(new QuestionRod({
-			position: vector,
-			config: question.config,
-			inputType: question.inputType,
-			answers: question.answers
-		}));
+		if (question) {
+			this.addChild(new QuestionRod({
+				position: vector,
+				config: question.config,
+				inputType: question.inputType,
+				answers: question.answers
+			}));	
+		}
 	}
 
 	ready() {

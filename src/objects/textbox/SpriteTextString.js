@@ -8,8 +8,15 @@ import {gridCells, GRID_SIZE, isSpaceFree} from '../../helpers/Grid.js'
 import {events} from '../../Events.js';
 import {getCharacterWidth, getCharacterFrame} from './spriteFontMap.js';
 
+const FINAL_INDEX_STEP = 200;
+// Configuration options
+const PADDING_LEFT = 27;
+const PADDING_TOP = 6;
+const LINE_WIDTH_MAX = 240;
+const LINE_VERTICAL_HEIGHT = 14;
 
 export class SpriteTextString extends GameObject {
+
 	constructor(config = {}) {
 		super({
 			position: new Vector2(32, 112)
@@ -41,7 +48,8 @@ export class SpriteTextString extends GameObject {
 			// Return a length and a list of characters to the word.
 			return {
 				wordWidth,
-				chars
+				chars,
+				word
 			}
 		});
 		this.background = new Sprite({
@@ -61,6 +69,8 @@ export class SpriteTextString extends GameObject {
 		this.finalIndex = this.words.reduce((acc, word) => {
 			return acc + word.chars.length
 		}, 0);
+		this.currentFinalIndex = this.updateCurrentFinalIndex();
+		this.skipIndex = 0;
 		this.textSpeed = 40;
 		this.timeUntilNextShow = this.textSpeed;
 
@@ -69,49 +79,85 @@ export class SpriteTextString extends GameObject {
 	}
 
 	step(delta, root) {
-		const input =  root.input;
-		if (input?.getActionJustPressed("Space")) {
-			if (this.showingIndex < this.finalIndex) {
-				// Skip
-				this.showingIndex = this.finalIndex;
-				return;
+		try {
+
+			const input =  root.input;
+			if (input?.getActionJustPressed("Space")) {
+
+				if (this.showingIndex < this.currentFinalIndex) {
+					// Skip
+					this.showingIndex = this.currentFinalIndex;
+					return;
+				}
+				if (this.showingIndex < this.finalIndex) {
+					// Skip
+					this.updateCurrentFinalIndex();
+					return;
+				}
+
+				// Done with the textbox
+				events.emit("END_TEXT_BOX");
 			}
 
-			// Done with the textbox
-			events.emit("END_TEXT_BOX");
-		}
-
-		this.timeUntilNextShow -= delta;
-		if (this.timeUntilNextShow <= 0) {
-			this.showingIndex += 1;
-			this.timeUntilNextShow = this.textSpeed;
+			this.timeUntilNextShow -= delta;
+			if (this.timeUntilNextShow <= 0) {
+				if (this.showingIndex <= this.currentFinalIndex) {
+					this.showingIndex += 1;	
+					this.timeUntilNextShow = this.textSpeed;
+				}
+			}	
+		} catch(e) {
+			console.error(e);
 		}
 	}
 
+	updateCurrentFinalIndex(amount) {
+		if (this.currentFinalIndex === undefined) {
+			this.currentFinalIndex = 0;
+		}
+		if (amount !== undefined) {
+			this.currentFinalIndex = amount;	
+		}
+		if (this.currentFinalIndex < this.finalIndex) {
+			this.skipIndex = this.currentFinalIndex;
+			this.currentFinalIndex += FINAL_INDEX_STEP;
+
+			if (this.currentFinalIndex >= this.finalIndex) {
+				this.currentFinalIndex = this.finalIndex;
+			}
+		}
+		return this.currentFinalIndex;
+	}
+
 	drawImage(ctx, drawPosX, drawPosY) {
+		this.drawPosX = drawPosX;
+		this.drawPosY = drawPosY;
 		this.background.drawImage(ctx, drawPosX, drawPosY);
 
 		// Draw the portrait 
 		this.portrait.drawImage(ctx, drawPosX + 6, drawPosY + 6);
 
-		// Configuration options
-		const PADDING_LEFT = 27;
-		const PADDING_TOP = 9;
-		const LINE_WIDTH_MAX = 240;
-		const LINE_VERTICAL_HEIGHT = 14;
 
-		let cursorX = drawPosX + PADDING_LEFT;
-		let cursorY = drawPosY + PADDING_TOP;
-		let currentShowingIndex = 0;
+		this.cursorX = drawPosX + PADDING_LEFT;
+		this.cursorY = drawPosY + PADDING_TOP;
+		const wordsConfig = this.getWordsConfig(
+			this.skipIndex,
+			this.currentFinalIndex,
+			this.cursorX,
+			drawPosX,
+			drawPosY
+		);
+		let currentShowingIndex = wordsConfig.startIndex;
+		this.currentFinalIndex = wordsConfig.endIndex;
 
-		this.words.forEach(word => {
+
+		wordsConfig.words.forEach(word => {
 			// Decide if we can fit this next word on this next line
-			const spaceRemaining = drawPosX + LINE_WIDTH_MAX - cursorX;
+			const spaceRemaining = drawPosX + LINE_WIDTH_MAX - this.cursorX;
 			if (spaceRemaining < word.wordWidth) {
-				cursorY += LINE_VERTICAL_HEIGHT;
-				cursorX = drawPosX + PADDING_LEFT;
+				this.cursorY += LINE_VERTICAL_HEIGHT;
+				this.cursorX = drawPosX + PADDING_LEFT;
 			}
-
 			// Draw this whole segment of text
 			word.chars.forEach(char => {
 				// Stop here if we should not yet show the following characters
@@ -120,20 +166,77 @@ export class SpriteTextString extends GameObject {
 				}
 				const {sprite, width} = char;
 
-				const withCharOffset = cursorX - 5;
-				sprite.draw(ctx, withCharOffset, cursorY);
+				const withCharOffset = this.cursorX - 5;
+				sprite.draw(ctx, withCharOffset, this.cursorY);
 
 				// Add width of the character we just printed to the cursor pos
-				cursorX += width;
+				this.cursorX += width;
 
 				// plus 1px between character
-				cursorX += 1;
+				this.cursorX += 1;
 
 				// Uptick
 				currentShowingIndex += 1;
 			});
 			// Move the cursor over
-			cursorX += 3;
+			this.cursorX += 3;
 		})
+	}
+
+
+	cache = new Map();
+
+
+	getWordsConfig(startIndex, endIndex, cursorX, drawPosX, drawPosY) {
+		let currentIndex = 0;
+		let cursorY = drawPosY + PADDING_TOP;
+
+		if (this.cache.has(startIndex)) {
+			return this.cache.get(startIndex);
+		}
+
+		const words = this.words.map(word => {
+			// Decide if we can fit this next word on this next line
+			const spaceRemaining = drawPosX + LINE_WIDTH_MAX - cursorX;
+			if (spaceRemaining < word.wordWidth) {
+				cursorY += LINE_VERTICAL_HEIGHT;
+				cursorX = drawPosX + PADDING_LEFT;
+			}
+
+			if (currentIndex >= endIndex) {
+				return;
+			}
+
+			if (cursorY >= (drawPosY + (LINE_VERTICAL_HEIGHT * 4))) {
+				endIndex = currentIndex;
+				return;
+			}
+			
+			word.chars.forEach(char => {
+				if (currentIndex >= startIndex - 1) {
+					const {sprite, width} = char;
+					// Add width of the character we just printed to the cursor pos
+					cursorX += width;
+					// plus 1px between character
+					cursorX += 1;
+				}
+
+				// Uptick
+				currentIndex += 1;
+			});
+
+			if (currentIndex <= endIndex && currentIndex >= startIndex) {
+				cursorX += 3;
+				return word;
+			}
+		}).filter(word => word !== undefined);
+		// console.log(words.map(a => a.word).join(" "), startIndex, currentIndex, cursorY, (drawPosY + (LINE_VERTICAL_HEIGHT * 4)));
+		const obj = {
+			words,
+			startIndex: startIndex,
+			endIndex: currentIndex + 1
+		};
+		this.cache.set(startIndex, obj);
+		return obj;
 	}
 }
