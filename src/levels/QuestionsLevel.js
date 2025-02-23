@@ -23,25 +23,6 @@ export class QuestionsLevel extends DrunkardWalkLevel {
 		}
 	}
 
-	findRandomSpot(seed, floors, gameObjects) {
-		let vector = new Vector2(0, 0);
-		for (var i = Math.floor(seed() * floors.length); i < floors.length; i++) {
-			if (!this.atGameObject(floors[i], gameObjects)) {
-				return floors[i].position;
-			}
-		}
-		return vector;
-	}
-
-	atGameObject(obj, gameObjects) {
-		for (var i = gameObjects.length - 1; i >= 0; i--) {
-			if (gameObjects[i].position.matches(obj.position)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
 	placeQuestionRod(vector) {
 		const question = this.getQuestion();
 		if (question) {

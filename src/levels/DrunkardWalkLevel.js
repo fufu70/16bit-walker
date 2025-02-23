@@ -14,6 +14,7 @@ import {Npc} from '../objects/npc/Npc.js';
 import {Floor, FloorFactory} from '../objects/room/Floor.js';
 import {Wall, WallFactory} from '../objects/room/Wall.js';
 import {Trim, TrimFactory} from '../objects/room/Trim.js';
+import {Vase} from '../objects/room/Vase.js';
 import {OutdoorLevel1} from './OutdoorLevel1.js';
 import {CaveLevel1} from './CaveLevel1.js';
 import {TALKED_TO_A, TALKED_TO_B} from '../StoryFlags.js';
@@ -43,6 +44,7 @@ export class DrunkardWalkLevel extends Level {
 			params.seed = this.seed;
 			const floorPlan = this.buildFloorPlan(params);
 			this.floorPlan = floorPlan;
+			this.walls = new Set();
 
 			console.log("START this.addFloorSprites")
 			this.addFloorSprites(floorPlan, params);
@@ -66,10 +68,13 @@ export class DrunkardWalkLevel extends Level {
 			console.log("END this.addTrimSprites")
 			console.log("START this.addWallSprites")
 			this.addWallSprites(floorPlan, params);
-			console.log("END this.addWallSprites")
+			console.log("END this.addWallSprites");
+			console.log("START this.addVases");
+			this.addVases(floorPlan, params);
+			console.log("END this.addVases");
 
 			console.log("START this.getWalls");
-			this.walls = this.getWalls(floorPlan);
+			this.walls = this.getWalls(this.walls, floorPlan);
 			console.log("END this.getWalls");
 		} catch (e) {
 			console.error(e);	
@@ -84,6 +89,25 @@ export class DrunkardWalkLevel extends Level {
 	addFloor(floor) {
 		this.floors.push(floor);
 		this.addChild(floor);
+	}
+
+	findRandomSpot(seed, floors, gameObjects) {
+		let vector = new Vector2(0, 0);
+		for (var i = Math.floor(seed() * floors.length); i < floors.length; i++) {
+			if (!this.atGameObject(floors[i], gameObjects)) {
+				return floors[i].position;
+			}
+		}
+		return vector;
+	}
+
+	atGameObject(obj, gameObjects) {
+		for (var i = gameObjects.length - 1; i >= 0; i--) {
+			if (gameObjects[i].position.matches(obj.position)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	findFirstPosition(floorPlan) {
@@ -109,9 +133,7 @@ export class DrunkardWalkLevel extends Level {
 		return new Vector2(gridCells(max.x), gridCells(max.y));
 	}
 
-	getWalls(floorPlan) {
-		let walls = new Set();
-
+	getWalls(walls, floorPlan) {
 		for (let x = -1; x <= floorPlan.width(); x ++) {
 			for (let y = -1; y <= floorPlan.height(); y ++) {
 				if (floorPlan.get(x, y) == 0) {					
@@ -157,6 +179,15 @@ export class DrunkardWalkLevel extends Level {
 		for (var i = trims.length - 1; i >= 0; i--) {
 			this.addChild(trims[i]);
 		}
+	}
+
+	addVases(floorPlan, params) {
+
+		const spot = this.findRandomSpot(this.seed, this.floors, this.gameObjects);
+		this.addGameObject(new Vase(spot.x, spot.y, undefined, params.seed));
+		console.log(params.seed);
+
+		this.walls.add(`${spot.x}, ${spot.y}`);
 	}
 
 	getOrientation(x, y, floorPlan) {

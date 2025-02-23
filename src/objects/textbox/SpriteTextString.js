@@ -234,7 +234,7 @@ export class SpriteTextString extends GameObject {
 		const obj = {
 			words,
 			startIndex: startIndex,
-			endIndex: currentIndex + 1
+			endIndex: currentIndex + 1,
 		};
 		this.cache.set(startIndex, obj);
 		return obj;
