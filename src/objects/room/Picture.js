@@ -41,8 +41,8 @@ export class Picture extends GameObject {
 		}
 
 		this.addChild(new Sprite({
-			resource: resources.images.vase,
-			position: new Vector2(0, -5),
+			resource: resources.images.picture,
+			position: new Vector2(0, -10),
 			hFrames: 1,
 			vFrames: 6,
 			frame: PICTURE[style]

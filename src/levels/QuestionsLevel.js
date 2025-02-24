@@ -11,13 +11,12 @@ export class QuestionsLevel extends DrunkardWalkLevel {
 		try {
 			super({
 				...params,
-				width: 40,
-				height: 40,
-				maxSteps: 30,
+				width: 100,
+				height: 100,
+				maxSteps: 40,
 			});
-			this.questionsList = [...QUESTIONS];
+			this.questionsList = params.questions ?? [...QUESTIONS];
 			this.placeQuestionRod(this.findRandomSpot(this.seed, this.floors, this.gameObjects));
-
 		} catch (e) {
 			console.error(e);	
 		}
@@ -31,7 +30,7 @@ export class QuestionsLevel extends DrunkardWalkLevel {
 				config: question.config,
 				inputType: question.inputType,
 				answers: question.answers
-			}));	
+			}));
 		}
 	}
 
@@ -51,12 +50,21 @@ export class QuestionsLevel extends DrunkardWalkLevel {
 	}
 
 	getHome() {
+		if (this.params.previousLevel) {
+			return this.params.previousLevel;
+		}
 		return new OutdoorLevel1({
 			heroPosition: new Vector2(gridCells(4), gridCells(6))
 		});
 	}
 
 	getNextLevel() {
+		if (typeof this.params.nextLevel === 'function') {
+			return this.params.nextLevel();
+		}
+		if (typeof this.params.nextLevel ===  'object') {
+			return this.params.nextLevel;
+		}
 		return new QuestionsLevel({
 			seed: this.params.seed
 		});

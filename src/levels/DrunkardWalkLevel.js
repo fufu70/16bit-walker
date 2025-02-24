@@ -15,6 +15,7 @@ import {Floor, FloorFactory} from '../objects/room/Floor.js';
 import {Wall, WallFactory} from '../objects/room/Wall.js';
 import {Trim, TrimFactory} from '../objects/room/Trim.js';
 import {Vase} from '../objects/room/Vase.js';
+import {Picture} from '../objects/room/Picture.js';
 import {OutdoorLevel1} from './OutdoorLevel1.js';
 import {CaveLevel1} from './CaveLevel1.js';
 import {TALKED_TO_A, TALKED_TO_B} from '../StoryFlags.js';
@@ -39,6 +40,7 @@ export class DrunkardWalkLevel extends Level {
 
 			this.gameObjects = [];
 			this.floors = [];
+			this.wallSprites = [];
 
 			this.seed = params.seed ?? Math.seed(Math.random());
 			params.seed = this.seed;
@@ -46,9 +48,9 @@ export class DrunkardWalkLevel extends Level {
 			this.floorPlan = floorPlan;
 			this.walls = new Set();
 
-			console.log("START this.addFloorSprites")
+			console.log("START this.addFloorSprites");
 			this.addFloorSprites(floorPlan, params);
-			console.log("END this.addFloorSprites")
+			console.log("END this.addFloorSprites");
 
 
 			this.drunkWalkExitPosition = this.findFirstPosition(floorPlan);
@@ -94,12 +96,25 @@ export class DrunkardWalkLevel extends Level {
 		this.addChild(floor);
 	}
 
+	addWall(wall) {
+		this.wallSprites.push(wall);
+		this.addChild(wall);
+	}
+
 	findRandomSpot(seed, floors, gameObjects) {
 		let vector = new Vector2(0, 0);
 		for (var i = Math.floor(seed() * floors.length); i < floors.length; i++) {
 			if (!this.atGameObject(floors[i], gameObjects)) {
 				return floors[i].position;
 			}
+		}
+		return vector;
+	}
+
+	findRandomWallSpot(seed, wallSprites) {
+		let vector = new Vector2(0, 0);
+		for (var i = Math.floor(seed() * wallSprites.length); i < wallSprites.length; i++) {
+			return wallSprites[i].position;
 		}
 		return vector;
 	}
@@ -171,7 +186,7 @@ export class DrunkardWalkLevel extends Level {
 			seed: params.seed
 		});
 		for (var i = walls.length - 1; i >= 0; i--) {
-			this.addChild(walls[i]);
+			this.addWall(walls[i]);
 		}
 	}
 
@@ -191,6 +206,12 @@ export class DrunkardWalkLevel extends Level {
 		console.log(params.seed);
 
 		this.walls.add(`${spot.x}, ${spot.y}`);
+	}
+
+	addPictures(floorPlan, params) {
+		const spot = this.findRandomWallSpot(this.seed, this.wallSprites);
+		console.log(spot);
+		this.addGameObject(new Picture(spot.x, spot.y, undefined, params.seed));
 	}
 
 	getOrientation(x, y, floorPlan) {
