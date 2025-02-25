@@ -13,7 +13,8 @@ export class QuestionsLevel extends DrunkardWalkLevel {
 				...params,
 				width: 100,
 				height: 100,
-				maxSteps: 40,
+				maxSteps: 10 + ((params.questions.length ?? 0)+ 4),
+				showNextLevel: params.showNextLevel ?? false
 			});
 			this.questionsList = params.questions ?? [...QUESTIONS];
 			this.placeQuestionRod(this.findRandomSpot(this.seed, this.floors, this.gameObjects));
@@ -31,6 +32,8 @@ export class QuestionsLevel extends DrunkardWalkLevel {
 				inputType: question.inputType,
 				answers: question.answers
 			}));
+		} else {
+			this.addNextLevelExit();
 		}
 	}
 
@@ -50,7 +53,10 @@ export class QuestionsLevel extends DrunkardWalkLevel {
 	}
 
 	getHome() {
-		if (this.params.previousLevel) {
+		if (typeof this.params.previousLevel === 'function') {
+			return this.params.previousLevel();
+		}
+		if (typeof this.params.previousLevel ===  'object') {
 			return this.params.previousLevel;
 		}
 		return new OutdoorLevel1({

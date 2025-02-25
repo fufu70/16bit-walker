@@ -95,7 +95,7 @@ export const PRINCIPLES_OF_AMERICAN_DEMOCRACY = [
 export const SYSTEM_OF_GOVERNMENT = [
 	{
 		config: {
-			string: "Name one branch or part of the government.*"
+			string: "Name one branch or part of the government."
 		},
 		inputType: "TEXT_INPUT",
 		answers: ["Congress", "legislative", "President", "executive", "the courts", "judicial"]
@@ -119,11 +119,11 @@ export const SYSTEM_OF_GOVERNMENT = [
 			string: "Who makes federal laws?"
 		},
 		inputType: "TEXT_INPUT",
-		answers: ["Congress", "Senate and House of Representatives", "Senate and House of Representatives", "U.S. legislature", "national legislature"]
+		answers: ["Congress", "Senate and House", "Senate and House of Representatives", "U.S. legislature", "national legislature"]
 	},
 	{
 		config: {
-			string: "What are the two parts of the U.S. Congress?*"
+			string: "What are the two parts of the U.S. Congress?"
 		},
 		inputType: "TEXT_INPUT",
 		answers: ["the Senate and House", "the Senate and House of Representatives"]
@@ -144,7 +144,7 @@ export const SYSTEM_OF_GOVERNMENT = [
 	},
 	{
 		config: {
-			string: "Who is one of your state’s U.S. Senators now?*"
+			string: "Who is one of your state's U.S. Senators now?"
 		},
 		inputType: "TEXT_INPUT",
 		answers: ["Ted Budd", "Thom Tillis"]
@@ -182,7 +182,17 @@ export const SYSTEM_OF_GOVERNMENT = [
 			string: "Why do some states have more Representatives than other states?"
 		},
 		inputType: "TEXT_INPUT",
-		answers: ["(because of) the state’s population", "(because) they have more people", "(because) some states have more people", "the state’s population", "they have more people", "some states have more people"]
+		answers: [
+			"because of the state's population",
+			" the state's population",
+			"because they have more people",
+			"they have more people",
+			"because some states have more people",
+			"some states have more people",
+			"the state's population",
+			"they have more people",
+			"some states have more people"
+		]
 	},
 	{
 		config: {
@@ -193,14 +203,14 @@ export const SYSTEM_OF_GOVERNMENT = [
 	},
 	{
 		config: {
-			string: "In what month do we vote for President?*"
+			string: "In what month do we vote for President?"
 		},
 		inputType: "TEXT_INPUT",
 		answers: ["November"]
 	},
 	{
 		config: {
-			string: "What is the name of the President of the United States now?*"
+			string: "What is the name of the President of the United States now?"
 		},
 		inputType: "TEXT_INPUT",
 		answers: ["Donald J. Trump", "Donald John Trump", "Donald Trump"]
@@ -249,7 +259,7 @@ export const SYSTEM_OF_GOVERNMENT = [
 	},
 	{
 		config: {
-			string: "What does the President’s Cabinet do?"
+			string: "What does the President's Cabinet do?"
 		},
 		inputType: "TEXT_INPUT",
 		answers: ["advises the President"]
@@ -301,7 +311,7 @@ export const SYSTEM_OF_GOVERNMENT = [
 			string: "Under our Constitution, some powers belong to the states. What is one power of the states?"
 		},
 		inputType: "TEXT_INPUT",
-		answers: ["provide schooling and education", "provide protection (police)", "provide safety (fire departments)", "give a driver’s license", "approve zoning and land use"]
+		answers: ["provide schooling and education", "provide protection (police)", "provide safety (fire departments)", "give a driver's license", "approve zoning and land use"]
 	},
 	{
 		config: {
@@ -312,14 +322,14 @@ export const SYSTEM_OF_GOVERNMENT = [
 	},
 	{
 		config: {
-			string: "What is the capital of your state?*"
+			string: "What is the capital of your state?"
 		},
 		inputType: "TEXT_INPUT",
 		answers: ["Raleigh"]
 	},
 	{
 		config: {
-			string: "What are the two major political parties in the United States?*"
+			string: "What are the two major political parties in the United States?"
 		},
 		inputType: "TEXT_INPUT",
 		answers: ["Democratic and Republican"]
@@ -346,11 +356,11 @@ export const RIGHTS_AND_RESPONSIBILITIES = [
 			string: "There are four amendments to the Constitution about who can vote. Describe one of them."
 		},
 		inputType: "TEXT_INPUT",
-		answers: ["Citizens eighteen and older can vote", "Citizens 18 and older can vote", "Citizens eighteen and older", "Citizens 18 and older", "You don’t have to pay a poll tax to vote", "You don’t have to pay to vote", "Any citizen can vote", "Women and men can vote", "A male citizen of any race", "A male citizen of any race can vote"]
+		answers: ["Citizens eighteen and older can vote", "Citizens 18 and older can vote", "Citizens eighteen and older", "Citizens 18 and older", "You don't have to pay a poll tax to vote", "You don't have to pay to vote", "Any citizen can vote", "Women and men can vote", "A male citizen of any race", "A male citizen of any race can vote"]
 	},
 	{
 		config: {
-			string: "What is one responsibility that is only for United States citizens?*"
+			string: "What is one responsibility that is only for United States citizens?"
 		},
 		inputType: "TEXT_INPUT",
 		answers: ["serve on a jury", "vote in a federal election"]
@@ -385,7 +395,7 @@ export const RIGHTS_AND_RESPONSIBILITIES = [
 	},
 	{
 		config: {
-			string: "How old do citizens have to be to vote for President?*"
+			string: "How old do citizens have to be to vote for President?"
 		},
 		inputType: "TEXT_INPUT",
 		answers: ["eighteen and older", "18 and older"]
@@ -399,7 +409,7 @@ export const RIGHTS_AND_RESPONSIBILITIES = [
 	},
 	{
 		config: {
-			string: "When is the last day you can send in federal income tax forms?*"
+			string: "When is the last day you can send in federal income tax forms?"
 		},
 		inputType: "TEXT_INPUT",
 		answers: ["April 15"]
@@ -440,7 +450,7 @@ export const COLONIAL_PERIOD_AND_INDEPENDENCE = [
 			string: "Why did the colonists fight the British?"
 		},
 		inputType: "TEXT_INPUT",
-		answers: ["because of high taxes", "taxation without representation", "because the British army stayed in their houses (boarding, quartering)", "boarding, quartering", "because they didn’t have self-government"]
+		answers: ["because of high taxes", "taxation without representation", "because the British army stayed in their houses (boarding, quartering)", "boarding, quartering", "because they didn't have self-government"]
 	},
 	{
 		config: {
@@ -489,18 +499,18 @@ export const COLONIAL_PERIOD_AND_INDEPENDENCE = [
 			string: "What is one thing Benjamin Franklin is famous for?"
 		},
 		inputType: "TEXT_INPUT",
-		answers: ["U.S. diplomat", "oldest member of the Constitutional Convention", "first Postmaster General of the United States", "writer of Poor Richard’s Almanac", "started the first free libraries"]
+		answers: ["U.S. diplomat", "oldest member of the Constitutional Convention", "first Postmaster General of the United States", "writer of Poor Richard's Almanac", "started the first free libraries"]
 	},
 	{
 		config: {
-			string: "Who is the “Father of Our Country”?"
+			string: "Who is the 'Father of Our Country'?"
 		},
 		inputType: "TEXT_INPUT",
 		answers: ["Washington", "George Washington"]
 	},
 	{
 		config: {
-			string: "Who was the first President?*"
+			string: "Who was the first President?"
 		},
 		inputType: "TEXT_INPUT",
 		answers: ["Washington", "George Washington"]
@@ -538,7 +548,7 @@ export const CENTURY_18 = [
 	},
 	{
 		config: {
-			string: "What was one important thing that Abraham Lincoln did?*"
+			string: "What was one important thing that Abraham Lincoln did?"
 		},
 		inputType: "TEXT_INPUT",
 		answers: ["freed the slaves", "Emancipation Proclamation", "saved the Union", "preserved the Union", "led the United States during the Civil War"]
@@ -555,14 +565,14 @@ export const CENTURY_18 = [
 			string: "What did Susan B. Anthony do?"
 		},
 		inputType: "TEXT_INPUT",
-		answers: ["fought for women’s rights", "fought for civil rights"]
+		answers: ["fought for women's rights", "fought for civil rights"]
 	}
 ];
 
 export const RECENT_AMERICAN_HISTORY = [
 	{
 		config: {
-			string: "Name one war fought by the United States in the 1900s.*"
+			string: "Name one war fought by the United States in the 1900s."
 		},
 		inputType: "TEXT_INPUT",
 		answers: ["World War I", "World War II", "Korean War", "Vietnam War", "Persian Gulf War", "Gulf War"]
@@ -611,7 +621,7 @@ export const RECENT_AMERICAN_HISTORY = [
 	},
 	{
 		config: {
-			string: "What did Martin Luther King, Jr. do?*"
+			string: "What did Martin Luther King, Jr. do?"
 		},
 		inputType: "TEXT_INPUT",
 		answers: ["fought for civil rights", "worked for equality for all Americans"]
@@ -677,14 +687,14 @@ export const GEOGRAPHY = [
 	},
 	{	
 		config: {
-			string: "What is the capital of the United States?*"
+			string: "What is the capital of the United States?"
 		},
 		inputType: "TEXT_INPUT",
 		answers: ["Washington, D.C.",]
 	},
 	{	
 		config: {
-			string: "Where is the Statue of Liberty?*"
+			string: "Where is the Statue of Liberty?"
 		},
 		inputType: "TEXT_INPUT",
 		answers: ["New York Harbor", "New York", "Liberty Island"]
@@ -700,7 +710,7 @@ export const SYMBOLS = [
 	},	
 	{
 		config: {
-			string: "Why does the flag have 50 stars?*"
+			string: "Why does the flag have 50 stars?"
 		},
 		inputType: "TEXT_INPUT",
 		answers: ["because there is one star for each state", "because each star represents a state", "because there are 50 states"]
@@ -716,7 +726,7 @@ export const SYMBOLS = [
 export const HOLIDAYS = [
 	{
 		config: {
-			string: "When do we celebrate Independence Day?*"
+			string: "When do we celebrate Independence Day?"
 		},
 		inputType: "TEXT_INPUT",
 		answers: ["July 4",]
@@ -726,7 +736,7 @@ export const HOLIDAYS = [
 			string: "Name two national U.S. holidays."
 		},
 		inputType: "TEXT_INPUT",
-		answers: ["New Year’s Day", "Martin Luther King, Jr. Day", "Presidents’ Day", "Memorial Day", "Independence Day", "Labor Day", "Columbus Day", "Veterans Day", "Thanksgiving", "Christmas"]
+		answers: ["New Year's Day", "Martin Luther King, Jr. Day", "Presidents' Day", "Memorial Day", "Independence Day", "Labor Day", "Columbus Day", "Veterans Day", "Thanksgiving", "Christmas"]
 	},	
 ];
 

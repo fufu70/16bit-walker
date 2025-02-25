@@ -100,56 +100,109 @@ export class OutdoorLevel1 extends Level {
 				const seed7Func = () => Math.seed(seed7);
 				const seed8Func = () => Math.seed(seed8);
 				const seed9Func = () => Math.seed(seed9);
-				const level1 = new QuestionsLevel({
-					seed: seed1Func(),
-					questions: [...PRINCIPLES_OF_AMERICAN_DEMOCRACY],
-				});
-				const level2 = new QuestionsLevel({
-					seed: seed2Func(),
+
+				const level1Params = {
+					seedNumber: seed1,
+					showNextLevel: true,
+					questions: [...PRINCIPLES_OF_AMERICAN_DEMOCRACY]
+				};
+				const level2Params = {
+					seedNumber: seed2,
+					showNextLevel: true,
 					questions: [...SYSTEM_OF_GOVERNMENT]
-				});
-				const level3 = new QuestionsLevel({
-					seed: seed3Func(),
+				};
+				const level3Params = {
+					seedNumber: seed3,
+					showNextLevel: true,
 					questions: [...RIGHTS_AND_RESPONSIBILITIES]
-				});
-				const level4 = new QuestionsLevel({
-					seed: seed4Func(),
+				};
+				const level4Params = {
+					seedNumber: seed4,
+					showNextLevel: true,
 					questions: [...COLONIAL_PERIOD_AND_INDEPENDENCE]
-				});
-				const level5 = new QuestionsLevel({
-					seed: seed5Func(),
+				};
+				const level5Params = {
+					seedNumber: seed5,
+					showNextLevel: true,
 					questions: [...CENTURY_18]
-				});
-				const level6 = new QuestionsLevel({
-					seed: seed6Func(),
+				};
+				const level6Params = {
+					seedNumber: seed6,
+					showNextLevel: true,
 					questions: [...RECENT_AMERICAN_HISTORY]
-				});
-				const level7 = new QuestionsLevel({
-					seed: seed7Func(),
+				};
+				const level7Params = {
+					seedNumber: seed7,
+					showNextLevel: true,
 					questions: [...GEOGRAPHY]
-				});
-				const level8 = new QuestionsLevel({
-					seed: seed8Func(),
+				};
+				const level8Params = {
+					seedNumber: seed8,
+					showNextLevel: true,
 					questions: [...SYMBOLS]
-				});
-				const level9 = new QuestionsLevel({
-					seed: seed9Func(),
-					questions: [...HOLIDAYS]
-				});
-				level1.params.nextLevel = level2;
-				level2.params.nextLevel = level3;
-				level3.params.nextLevel = level4;
-				level4.params.nextLevel = level5;
-				level5.params.nextLevel = level6;
-				level6.params.nextLevel = level7;
-				level7.params.nextLevel = level8;
-				level8.params.nextLevel = level9;
-				level9.params.nextLevel = new CaveLevel1({
-					heroPosition: new Vector2(gridCells(10), gridCells(5))
-				});
+				};
+				const level9Params = {
+					seedNumber: seed9,
+					showNextLevel: true,
+					questions: [...HOLIDAYS],
+					nextLevel: () => {
+						return new CaveLevel1({
+							heroPosition: new Vector2(gridCells(10), gridCells(5))
+						})
+					}
+				};
+				level8Params.nextLevel = () => {
+					return new QuestionsLevel(level9Params);
+				}
+				level7Params.nextLevel = () => {
+					return new QuestionsLevel(level8Params);
+				}
+				level6Params.nextLevel = () => {
+					return new QuestionsLevel(level7Params);
+				}
+				level5Params.nextLevel = () => {
+					return new QuestionsLevel(level6Params);
+				}
+				level4Params.nextLevel = () => {
+					return new QuestionsLevel(level5Params);
+				}
+				level3Params.nextLevel = () => {
+					return new QuestionsLevel(level4Params);
+				}
+				level2Params.nextLevel = () => {
+					return new QuestionsLevel(level3Params);
+				}
+				level1Params.nextLevel = () => {
+					return new QuestionsLevel(level2Params);
+				}
+
+				level9Params.previousLevel = () => {
+					return new QuestionsLevel(level8Params);
+				}
+				level8Params.previousLevel = () => {
+					return new QuestionsLevel(level7Params);
+				}
+				level7Params.previousLevel = () => {
+					return new QuestionsLevel(level6Params);
+				}
+				level6Params.previousLevel = () => {
+					return new QuestionsLevel(level5Params);
+				}
+				level5Params.previousLevel = () => {
+					return new QuestionsLevel(level4Params);
+				}
+				level4Params.previousLevel = () => {
+					return new QuestionsLevel(level3Params);
+				}
+				level3Params.previousLevel = () => {
+					return new QuestionsLevel(level2Params);
+				}
+				level2Params.previousLevel = () => {
+					return new QuestionsLevel(level1Params);
+				}
 				events.emit(
-					"CHANGE_LEVEL", 
-					level1
+					"CHANGE_LEVEL",
+					new QuestionsLevel(level1Params)
 				);
 			}
 			if (exit.position.matches(MODERN_INTERIOR_EXIT)) {

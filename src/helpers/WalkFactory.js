@@ -17,7 +17,7 @@ export class WalkFactoryQuery {
 		this.maxSteps = params.maxSteps ?? WalkFactoryQuery.MAX_STEPS;
 		this.seed = params.seed ??  Math.seed(WalkFactoryQuery.SEED);
 		this.stepSize = params.stepSize ?? WalkFactoryQuery.STEP_SIZE;
-		this.randomGenerator = params.seed;
+		this.randomGenerator = Math.seed(params.seed());
 
 
 		let x = Math.round(this.random() * this.width);

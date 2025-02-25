@@ -16,6 +16,8 @@ canvas {
   width: 100vw;
   height: calc(100vw * (180 / 320));
   background: blue;
+  max-height: 100%;
+  max-width: calc(100vh * (320/180));
 }
 
 @font-face {

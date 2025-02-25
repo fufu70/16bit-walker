@@ -41,7 +41,9 @@ export class DrunkardWalkLevel extends Level {
 			this.gameObjects = [];
 			this.floors = [];
 			this.wallSprites = [];
-
+			if (params.seedNumber !== undefined) {
+				params.seed = Math.seed(params.seedNumber);
+			}
 			this.seed = params.seed ?? Math.seed(Math.random());
 			params.seed = this.seed;
 			const floorPlan = this.buildFloorPlan(params);
@@ -52,9 +54,9 @@ export class DrunkardWalkLevel extends Level {
 			this.addFloorSprites(floorPlan, params);
 			console.log("END this.addFloorSprites");
 
-
-			this.drunkWalkExitPosition = this.findFirstPosition(floorPlan);
-			this.addGameObject(new Exit(this.drunkWalkExitPosition.x, this.drunkWalkExitPosition.y));
+			if (params.showNextLevel === undefined || params.showNextLevel === true) {
+				this.addNextLevelExit();	
+			}
 
 			const heroStart = params.heroPosition ?? this.findHighestPosition(floorPlan);
 
@@ -86,6 +88,11 @@ export class DrunkardWalkLevel extends Level {
 		}
 	}
 
+	addNextLevelExit() {
+		this.drunkWalkExitPosition = this.findFirstPosition(this.floorPlan);
+		this.addGameObject(new Exit(this.drunkWalkExitPosition.x, this.drunkWalkExitPosition.y));
+	}
+
 	addGameObject(gameObject) {
 		this.gameObjects.push(gameObject);
 		this.addChild(gameObject);
@@ -103,8 +110,9 @@ export class DrunkardWalkLevel extends Level {
 
 	findRandomSpot(seed, floors, gameObjects) {
 		let vector = new Vector2(0, 0);
+		const nextLevelExit = this.findFirstPosition(this.floorPlan);
 		for (var i = Math.floor(seed() * floors.length); i < floors.length; i++) {
-			if (!this.atGameObject(floors[i], gameObjects)) {
+			if (!this.atGameObject(floors[i], gameObjects) && !nextLevelExit.matches(floors[i].position)) {
 				return floors[i].position;
 			}
 		}
