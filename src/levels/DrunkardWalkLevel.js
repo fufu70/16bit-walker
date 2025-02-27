@@ -16,6 +16,7 @@ import {Wall, WallFactory} from '../objects/room/Wall.js';
 import {Trim, TrimFactory} from '../objects/room/Trim.js';
 import {Vase} from '../objects/room/Vase.js';
 import {Picture} from '../objects/room/Picture.js';
+import {Television} from '../objects/room/Television.js';
 import {OutdoorLevel1} from './OutdoorLevel1.js';
 import {CaveLevel1} from './CaveLevel1.js';
 import {TALKED_TO_A, TALKED_TO_B} from '../StoryFlags.js';
@@ -77,8 +78,12 @@ export class DrunkardWalkLevel extends Level {
 			this.addVases(floorPlan, params);
 			console.log("END this.addVases");
 			console.log("START this.addPictures");
-			this.addPictures(floorPlan, params);
+			this.addPictures(params);
 			console.log("END this.addPictures");
+
+			console.log("START this.addTelevisions");
+			this.addTelevisions(params);
+			console.log("END this.addTelevisions");
 
 			console.log("START this.getWalls");
 			this.walls = this.getWalls(this.walls, floorPlan);
@@ -119,10 +124,25 @@ export class DrunkardWalkLevel extends Level {
 		return vector;
 	}
 
-	findRandomWallSpot(seed, wallSprites) {
+	findRandomWallSpot(seed, wallSprites, gameObjects, widthToFind = 16) {
+		console.log(this);
 		let vector = new Vector2(0, 0);
 		for (var i = Math.floor(seed() * wallSprites.length); i < wallSprites.length; i++) {
-			return wallSprites[i].position;
+			let y = wallSprites[i].position.y;
+			let length = widthToFind;
+			let j = i;
+			while (length > 0 && wallSprites[j]?.position.y === y) {
+				if (!this.atGameObject(wallSprites[j], gameObjects)) {
+					length -= gridCells(1);
+					j ++;
+				} else {
+					break;
+				}
+
+				if (length === 0) {
+					return wallSprites[i].position;
+				}
+			}
 		}
 		return vector;
 	}
@@ -211,15 +231,19 @@ export class DrunkardWalkLevel extends Level {
 
 		const spot = this.findRandomSpot(this.seed, this.floors, this.gameObjects);
 		this.addGameObject(new Vase(spot.x, spot.y, undefined, params.seed));
-		console.log(params.seed);
-
 		this.walls.add(`${spot.x}, ${spot.y}`);
 	}
 
-	addPictures(floorPlan, params) {
-		const spot = this.findRandomWallSpot(this.seed, this.wallSprites);
+	addPictures(params) {
+		const spot = this.findRandomWallSpot(this.seed, this.wallSprites, this.gameObjects);
 		console.log(spot);
 		this.addGameObject(new Picture(spot.x, spot.y, undefined, params.seed));
+	}
+
+	addTelevisions(params) {
+		const spot = this.findRandomWallSpot(this.seed, this.wallSprites, this.gameObjects, gridCells(2));
+		console.log(spot);
+		this.addGameObject(new Television(spot.x, spot.y, undefined, params.seed));
 	}
 
 	getOrientation(x, y, floorPlan) {

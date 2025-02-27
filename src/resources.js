@@ -21,6 +21,7 @@ class Resources {
 			shopObjects: "sprites/shop-assets/Interiors_free_16x16.png",
 			vase: "sprites/shop-assets/Vase_16x16.png",
 			picture: "sprites/shop-assets/Picture_16x16.png",
+			television: "sprites/shop-assets/TV_16x16.png",
 		}
 
 		// a bucket to keep all of our images
