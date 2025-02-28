@@ -90,7 +90,8 @@ export class CaveLevel1 extends Level {
 			}
 			if (exit.position.matches(DRUNKWALK_EXIT)) {
 				events.emit("CHANGE_LEVEL", new DrunkardWalkLevel({
-					seed: Math.seed(Math.random())
+					seed: Math.seed(Math.random()),
+					maxSteps: 10
 				}));	
 			}
 		});
