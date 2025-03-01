@@ -15,7 +15,7 @@ import './style.css'
 // import {Camera} from './src/objects/Camera.js';
 // import {GameObject} from './src/GameObject.js';
 // import {events} from './src/Events.js';
-import * as Empty from './src/Math.js';
+import * as Empty from './test/Math.js';
 
 // // grabbing the canvas to draw to
 // const canvas = document.querySelector("#game-canvas");
