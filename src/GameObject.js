@@ -1,5 +1,6 @@
 import {Vector2} from './Vector2.js';
 import {events} from './Events.js';
+import {GRID_SIZE} from './helpers/Grid.js'
 
 export class GameObject {
 	constructor({position}) {
@@ -9,15 +10,12 @@ export class GameObject {
 		this.hasReadyBeenCalled = false;
 		this.isSolid = false;
 		this.drawLayer = null;
+		this.size = new Vector2(GRID_SIZE, GRID_SIZE);
 	}
 
 	stepEntry(delta, root) {
 		this.children.forEach((child) => {
-			try {
-				child.stepEntry(delta, root);
-			} catch {
-				// console.log(child);
-			}
+			child.stepEntry(delta, root);
 		});
 
 		// call ready on the first frame

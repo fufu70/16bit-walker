@@ -34,16 +34,17 @@ export class Television extends GameObject {
 		});
 
 		if (seed !== undefined) {
-			style = TELEVISION_STYLES[Math.floor(seed() * 5)];
+			style = TELEVISION_STYLES[Math.floor(seed() * TELEVISION.length)];
 		}
 
 		this.addChild(new Sprite({
 			resource: resources.images.television,
 			frameSize: new Vector2(32, 16),
-			position: new Vector2(-16, -10),
+			position: new Vector2(0, -10),
 			hFrames: 1,
 			vFrames: 6,
 			frame: TELEVISION[style]
 		}));
+		this.size = new Vector2(gridCells(2), gridCells(1))
 	}
 }

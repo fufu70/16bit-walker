@@ -32,8 +32,8 @@ export class DrunkardWalkLevel extends Level {
 
 	constructor(params={}) {
 		super();
+		console.log("PARAMS: ", params);
 		try {
-
 			this.params = params;
 			this.background = new Sprite({
 				resource: resources.images.shopBackground,
@@ -128,14 +128,16 @@ export class DrunkardWalkLevel extends Level {
 	findRandomWallSpot(seed, sprites, gameObjects, widthToFind = gridCells(1)) {
 		let vector = new Vector2(0, 0);
 		let start = Math.floor(seed() * sprites.length);
-		let end = start - 1;
+		let end = start - 1 ;
+		// let start = 0;
+		// let end = sprites.length - 1;
 
 		for (var i = start; i % sprites.length != end; i++) {
 
 			let index = i % sprites.length;
 			if (
 				this.isPositionFree(
-					sprites[index],
+					sprites,
 					gameObjects,
 					sprites[index].position.y,
 					index,
@@ -147,26 +149,45 @@ export class DrunkardWalkLevel extends Level {
 		return vector;
 	}
 
-	isPositionFree(sprite, gameObjects, y, index, length) {
-		while (length > 0 && sprite?.position.y === y) {
-			if (!this.atGameObject(sprite, gameObjects)) {
+	isPositionFree(sprites, gameObjects, y, index, length) {
+		let currentSprite = sprites[index];
+		while (length > 0 && currentSprite) {
+			if (!this.atGameObject(currentSprite, gameObjects)) {
 				length -= gridCells(1);
-				index ++;
 			} else {
 				break;
 			}
+
+			currentSprite = this.findSprite(new Vector2(
+				currentSprite.position.x + gridCells(1),
+				currentSprite.position.y
+			), sprites);
 
 			if (length === 0) {
 				return true;
 			}
 		}
-		console.log(y, index, length)
 		return false;
+	}
+
+	findSprite(position, sprites) {
+		for (var i = sprites.length - 1; i >= 0; i--) {
+			if (sprites[i].position.matches(position)) {
+				return sprites[i];
+			}
+		}
 	}
 
 	atGameObject(obj, gameObjects) {
 		for (var i = gameObjects.length - 1; i >= 0; i--) {
-			if (gameObjects[i].position.matches(obj.position)) {
+			// console.log(gameObjects[i]);
+			const maxX = new Vector2(
+				gameObjects[i].position.x + gameObjects[i].size.x,
+				gameObjects[i].position.y
+			);
+			// console.log(gameObjects[i].drawLayer, maxX);
+			if (gameObjects[i].position.matches(obj.position)
+				|| maxX.matches(obj.position)) {
 				return true;
 			}
 		}
@@ -253,23 +274,22 @@ export class DrunkardWalkLevel extends Level {
 
 	addPictures(params) {
 		const spot = this.findRandomWallSpot(this.seed, this.wallSprites, this.gameObjects);
-		console.log(spot);
 		this.addGameObject(new Picture(spot.x, spot.y, undefined, params.seed));
 	}
 
 	addTelevisions(params) {
 		const spot = this.findRandomWallSpot(this.seed, this.wallSprites, this.gameObjects, gridCells(2));
-		console.log(spot);
 		this.addGameObject(new Television(spot.x, spot.y, undefined, params.seed));
 	}
 
 	addBookshelves(params) {
-		// console.log(this, this.seed, this.floors, this.gameObjects, gridCells(2));
-		// const spot = this.findRandomSpot(this.seed, this.floors, this.gameObjects, gridCells(2));
+		// console.log(this, this.seed, this.floors, this.gameObjects, gridCells(3));
+		const spot = this.findRandomSpot(this.seed, this.floors, this.gameObjects, gridCells(2));
 		// console.log(spot);
-		// this.addGameObject(new Bookshelf(spot.x, spot.y, undefined, params.seed));
-		// this.walls.add(`${spot.x}, ${spot.y}`);
-		// this.walls.add(`${spot.x + gridCells(1)}, ${spot.y}`);
+		this.addGameObject(new Bookshelf(spot.x, spot.y, undefined, params.seed));
+
+		this.walls.add(`${spot.x}, ${spot.y}`);
+		this.walls.add(`${spot.x + gridCells(1)}, ${spot.y}`);
 	}
 
 	getOrientation(x, y, floorPlan) {

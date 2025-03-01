@@ -37,7 +37,7 @@ export class Picture extends GameObject {
 		});
 
 		if (seed !== undefined) {
-			style = PICTURE_STYLES[Math.floor(seed() * 6)];
+			style = PICTURE_STYLES[Math.floor(seed() * PICTURE_STYLES.length)];
 		}
 
 		this.addChild(new Sprite({

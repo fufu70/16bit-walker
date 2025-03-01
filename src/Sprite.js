@@ -40,7 +40,7 @@ export class Sprite extends GameObject {
 	}
 
 	step(delta) {
-		if (!this.animations) {
+		if (!this.animations || typeof this.animations?.step !== 'function') {
 			return;
 		}
 

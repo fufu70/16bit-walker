@@ -13,7 +13,7 @@ export class QuestionsLevel extends DrunkardWalkLevel {
 				...params,
 				width: 100,
 				height: 100,
-				maxSteps: 10 + ((params.questions.length ?? 0)+ 4),
+				maxSteps: 50 + ((params.questions.length ?? 0)+ 4),
 				showNextLevel: params.showNextLevel ?? false
 			});
 			this.questionsList = params.questions ?? [...QUESTIONS];
