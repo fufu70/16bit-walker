@@ -1,5 +1,5 @@
 import './style.css'
-import {resources} from './src/Res.js';
+import {resources} from './src/Resources.js';
 import {Sprite} from './src/Sprite.js';
 import {Vector2} from './src/Vector2.js';
 import {GameLoop} from './src/GameLoop.js';
