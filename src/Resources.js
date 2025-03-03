@@ -23,6 +23,7 @@ class Resources {
 			picture: "sprites/shop-assets/Picture_16x16.png",
 			television: "sprites/shop-assets/TV_16x16.png",
 			bookshelf: "sprites/shop-assets/Bookshelf_16x16.png",
+			drawer: "sprites/shop-assets/Drawer_16x16.png",
 		}
 
 		// a bucket to keep all of our images

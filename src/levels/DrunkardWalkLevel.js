@@ -17,6 +17,7 @@ import {Trim, TrimFactory} from '../objects/room/Trim.js';
 import {Vase} from '../objects/room/Vase.js';
 import {Picture} from '../objects/room/Picture.js';
 import {Television} from '../objects/room/Television.js';
+import {Drawer} from '../objects/room/Drawer.js';
 import {Bookshelf} from '../objects/room/Bookshelf.js';
 import {OutdoorLevel1} from './OutdoorLevel1.js';
 import {CaveLevel1} from './CaveLevel1.js';
@@ -88,6 +89,9 @@ export class DrunkardWalkLevel extends Level {
 			console.log("START this.addBookshelves");
 			this.addBookshelves(params);
 			console.log("END this.addBookshelves");
+			console.log("START this.addDrawers");
+			this.addDrawers(params);
+			console.log("END this.addDrawers");
 
 			console.log("START this.getWalls");
 			this.walls = this.getWalls(this.walls, floorPlan);
@@ -287,6 +291,16 @@ export class DrunkardWalkLevel extends Level {
 		const spot = this.findRandomSpot(this.seed, this.floors, this.gameObjects, gridCells(2));
 		// console.log(spot);
 		this.addGameObject(new Bookshelf(spot.x, spot.y, undefined, params.seed));
+
+		this.walls.add(`${spot.x}, ${spot.y}`);
+		this.walls.add(`${spot.x + gridCells(1)}, ${spot.y}`);
+	}
+
+	addDrawers(params) {
+		// console.log(this, this.seed, this.floors, this.gameObjects, gridCells(3));
+		const spot = this.findRandomSpot(this.seed, this.floors, this.gameObjects, gridCells(2));
+		// console.log(spot);
+		this.addGameObject(new Drawer(spot.x, spot.y, undefined, params.seed));
 
 		this.walls.add(`${spot.x}, ${spot.y}`);
 		this.walls.add(`${spot.x + gridCells(1)}, ${spot.y}`);
