@@ -37,6 +37,7 @@ export class Hero extends GameObject {
 		});
 		this.addChild(shadowSprite);
 		this.addChild(this.body);
+		this.drawLayer = "HERO";
 
 	}
 

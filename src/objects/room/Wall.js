@@ -25,6 +25,7 @@ export class Wall extends GameObject {
 		super({
 			position: new Vector2(x, y)
 		});
+		this.drawLayer = 'WALL'
 		const topWall = new Sprite({
 			resource: resources.images.shopFloor,
 			hFrames: 17,

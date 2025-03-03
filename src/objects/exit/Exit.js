@@ -20,7 +20,7 @@ export class Exit extends GameObject {
 		});
 		this.addChild(sprite);
 
-		this.drawLayer = "FLOOR";
+		this.drawLayer = "EXIT";
 	}
 
 	ready() {

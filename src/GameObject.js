@@ -44,20 +44,29 @@ export class GameObject {
 
 		this.getDrawChildrenOrdered().forEach((child )=> {
 			try {
-
 				child.draw(ctx, drawPosX, drawPosY);
 			} catch {
-				// console.log(child);
+				console.log(child);
 			}
 		})
 	}
 
 	getDrawChildrenOrdered() {
-		return [...this.children].sort((a, b) => {
-			if (a.drawLayer === "FLOOR") {
-				return -1;
-			}
+		const floors = this.children.filter(a => a.drawLayer === 'FLOOR');
+		const exits = this.children.filter(a => a.drawLayer === 'EXIT');
+		const walls = this.children.filter(a => a.drawLayer === 'WALL');
+		const nonFloors = this.children.filter(a => a.drawLayer !== 'FLOOR' && a.drawLayer !== 'EXIT' && a.drawLayer !== 'WALL');
 
+		return [
+			...this.orderByVertical(floors),
+			...this.orderByVertical(exits),
+			...this.orderByVertical(walls),
+			...this.orderByVertical(nonFloors),
+		]
+	}
+
+	orderByVertical(kids) {
+		return [...kids].sort((a, b) => {
 			return a.position.y > b.position.y ? 1 : -1
 		});
 	}

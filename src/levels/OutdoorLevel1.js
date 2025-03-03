@@ -46,6 +46,7 @@ export class OutdoorLevel1 extends Level {
 			resource: resources.images.ground,
 			frameSize: new Vector2(320, 180)
 		});
+		groundSprite.drawLayer = "FLOOR";
 		this.addChild(groundSprite);
 
 		const rod = new Rod(gridCells(7), gridCells(6));

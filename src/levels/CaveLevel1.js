@@ -31,8 +31,9 @@ export class CaveLevel1 extends Level {
 
 		const groundSprite = new Sprite({
 			resource: resources.images.caveGround,
-			frameSize: new Vector2(320, 180)
+			frameSize: new Vector2(320, 180),
 		});
+		groundSprite.drawLayer = "FLOOR";
 		this.addChild(groundSprite);
 
 		this.addChild(new Exit(OUTDOOR_EXIT.x, OUTDOOR_EXIT.y));
