@@ -11,15 +11,22 @@ export class QuestionsLevel extends DrunkardWalkLevel {
 		try {
 			super({
 				...params,
-				width: 100,
-				height: 100,
-				maxSteps: 50 + ((params.questions.length ?? 0)+ 4),
-				showNextLevel: params.showNextLevel ?? false
+				width: 20,
+				height: 20,
+				maxSteps: 10 * ((params.questions.length ?? 0)+ 4),
+				showNextLevel: params.showNextLevel ?? false,
+				rotationChanges: params.questions.length ?? 0,
+				rooms: Math.max(Math.ceil(params.questions.length / 6), 1),
+				roomParams: {
+					stepSize: 5,
+					maxSteps: 10,
+					rotationChanges: 1,
+				}
 			});
 			this.questionsList = params.questions ?? [...QUESTIONS];
 			this.placeQuestionRod(this.findRandomSpot(this.seed, this.floors, this.gameObjects));
 		} catch (e) {
-			console.error(e);	
+			console.error(e);
 		}
 	}
 

@@ -55,12 +55,20 @@ export class GameObject {
 		const floors = this.children.filter(a => a.drawLayer === 'FLOOR');
 		const exits = this.children.filter(a => a.drawLayer === 'EXIT');
 		const walls = this.children.filter(a => a.drawLayer === 'WALL');
-		const nonFloors = this.children.filter(a => a.drawLayer !== 'FLOOR' && a.drawLayer !== 'EXIT' && a.drawLayer !== 'WALL');
+		const nonFloors = this.children.filter(a => 
+			a.drawLayer !== 'FLOOR' 
+			&& a.drawLayer !== 'EXIT' 
+			// && a.drawLayer !== 'WALL'
+		);
+
+		// console.log(nonFloors.map(a => a.drawLayer))
+		// console.log(this.orderByVertical(nonFloors).map(a => a.drawLayer))
+		// console.log(this.orderByWall(this.orderByVertical(nonFloors)).map(a => a.drawLayer))
 
 		return [
 			...this.orderByVertical(floors),
 			...this.orderByVertical(exits),
-			...this.orderByVertical(walls),
+			// ...this.orderByVertical(walls),
 			...this.orderByVertical(nonFloors),
 		]
 	}
@@ -68,6 +76,14 @@ export class GameObject {
 	orderByVertical(kids) {
 		return [...kids].sort((a, b) => {
 			return a.position.y > b.position.y ? 1 : -1
+		});
+	}
+
+	orderByWall(kids) {
+		return [...kids].sort((a, b) => {
+			if (a.drawLayer === 'TRIM' ) {
+				return -1;
+			}
 		});
 	}
 

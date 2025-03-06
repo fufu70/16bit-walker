@@ -57,8 +57,8 @@ export class WallFactory {
 
 		const walls = [];
 
-		for (let x = 0; x < floorPlan.width(); x ++) {
-			for (let y = 0; y < floorPlan.height(); y ++) {
+		for (let x = -1; x < floorPlan.width(); x ++) {
+			for (let y = -1; y < floorPlan.height(); y ++) {
 
 				if (!(floorPlan.get(x, y + 1) > 0 && floorPlan.get(x, y) == 0)) {
 					continue;

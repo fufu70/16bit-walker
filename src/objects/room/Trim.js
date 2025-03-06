@@ -66,8 +66,8 @@ export class Trim extends GameObject {
 		} else {
 			this.addTrim(orientation);
 		}
-		
-		this.drawLayer = "FLOOR";
+
+		this.drawLayer = "TRIM";
 	}
 
 

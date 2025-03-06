@@ -19,7 +19,6 @@ export class Rod extends GameObject {
 			position: new Vector2(0, -5) // nudge upwards visually
 		});
 		this.addChild(sprite);
-		this.drawLayer = "ROD";
 	}
 
 	ready() {

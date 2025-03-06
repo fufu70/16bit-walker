@@ -267,9 +267,9 @@ export const WEST_OUTLINES = [
 	 * XXF
 	 */
 	new Matrix([
+		[-1, 0,-1],
 		[-1, 0, 1],
-		[-1, 0, 1],
-		[-1, 0, 1]
+		[-1, 0,-1]
 	]),
 ];
 
@@ -356,18 +356,18 @@ export const SOUTH_LEFT_OUTLINES = [
 /**
  * SOUTH
  * 
- * FFF
+ * XFX
  * XWX
  * XXX
  */
 export const SOUTH_OUTLINES = [
 	/**
-	 * FFF
+	 * XFX
 	 * XWX
 	 * XXX
 	 */
 	new Matrix([
-		[ 1, 1, 1],
+		[-1, 1,-1],
 		[ 0, 0, 0],
 		[-1,-1,-1]
 	]),
@@ -463,14 +463,14 @@ export const EAST_BOTTOM_OUTLINES = [
  */
 export const EAST_OUTLINES = [
 	/**
-	 * FXX
+	 * XXX
 	 * FWX
-	 * FXX
+	 * XXX
 	 */
 	new Matrix([
+		[-1, 0,-1],
 		[ 1, 0,-1],
-		[ 1, 0,-1],
-		[ 1, 0,-1]
+		[-1, 0,-1]
 	]),
 ];
 
