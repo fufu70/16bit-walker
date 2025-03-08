@@ -130,7 +130,6 @@ export class FloorFactory {
 		if (!style && seed) {
 			style = this.seedStyle(seed);
 		}
-		console.log(style);
 
 		const floors = [];
 

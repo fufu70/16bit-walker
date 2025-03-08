@@ -24,6 +24,11 @@ class Resources {
 			television: "sprites/shop-assets/TV_16x16.png",
 			bookshelf: "sprites/shop-assets/Bookshelf_16x16.png",
 			drawer: "sprites/shop-assets/Drawer_16x16.png",
+
+			adam: "sprites/npcs/Adam_16x16.png",
+			alex: "sprites/npcs/Alex_16x16.png",
+			amelia: "sprites/npcs/Amelia_16x16.png",
+			bob: "sprites/npcs/Bob_16x16.png",
 		}
 
 		// a bucket to keep all of our images

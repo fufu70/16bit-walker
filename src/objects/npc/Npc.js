@@ -10,7 +10,7 @@ import {storyFlags} from '../../StoryFlags.js';
 
 
 export class Npc extends GameObject {
-	constructor(x, y, textConfig) {
+	constructor(x, y, textConfig, body, portraitFrame) {
 		super({
 			position: new Vector2(x, y)
 		});
@@ -18,7 +18,7 @@ export class Npc extends GameObject {
 		// Opt into being solid
 		this.isSolid = true;
 		this.content = textConfig.content;
-		this.portraitFrame = textConfig.portraitFrame;
+		this.portraitFrame = textConfig.portraitFrame ?? portraitFrame;
 
 		const shadow = new Sprite({
 			resource: resources.images.shadow,
@@ -27,13 +27,14 @@ export class Npc extends GameObject {
 		});
 		this.addChild(shadow);
 
-		const body = new Sprite({
-			resource: resources.images.knight,
-			frameSize: new Vector2(32, 32),
-			hFrames: 2,
-			vFrames: 1,
-			position: new Vector2(-8, -20)
-		})
+		body = body ?? new Sprite({
+			resource: resources.images.bob,
+			frameSize: new Vector2(16, 32),
+			hFrames: 24,
+			vFrames: 7,
+			frame: 3,
+			position: new Vector2(0, -22)
+		});
 		this.addChild(body);
 	}
 

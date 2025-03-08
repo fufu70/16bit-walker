@@ -7,6 +7,7 @@ import {Input, LEFT, RIGHT, UP, DOWN} from '../../Input.js';
 import {gridCells, GRID_SIZE, isSpaceFree} from '../../helpers/Grid.js'
 import {events} from '../../Events.js';
 import {OrientationFactory} from '../../helpers/orientation/OrientationFactory.js';
+import {WallFactory} from './Wall.js';
 import {
 	NORTH_RIGHT,
 	NORTH,
@@ -124,23 +125,18 @@ export class TrimFactory {
 
 	static generate(params) {
 		let {floorPlan} = params;
-		return new TrimFactory().get(floorPlan);
+		let walls = WallFactory.generate(params);
+		return new TrimFactory().get(floorPlan, walls);
 	}
 
-	get(floorPlan) {
+	get(floorPlan, walls) {
 		const trims = [];	
 		for (let x = -1; x < floorPlan.width() + 1; x ++) {
 			for (let y = -1; y < floorPlan.height() + 1; y ++) {
 
 				if (
 					!(floorPlan.get(x, y) == 0)
-					// !(
-					// 	(floorPlan.get(x, y - 1) > 0 && floorPlan.get(x, y) == 0)
-					// 	|| (floorPlan.get(x + 1, y) > 0 && floorPlan.get(x, y) == 0)
-					// 	|| (floorPlan.get(x - 1, y) > 0 && floorPlan.get(x, y) == 0)
-					// 	|| (floorPlan.get(x - 1, y - 1) > 0 && floorPlan.get(x, y) == 0)
-					// 	|| (floorPlan.get(x + 1, y - 1) > 0 && floorPlan.get(x, y) == 0)
-					// )
+					|| this.isWall(x, y, walls)
 				) {
 					continue;
 				}
@@ -160,5 +156,17 @@ export class TrimFactory {
 		}
 
 		return trims;
+	}
+
+	isWall(x, y, walls) {
+		for (var i = walls.length - 1; i >= 0; i--) {
+			if (
+				Math.floor(walls[i].position.x / 16) === x 
+				&& Math.floor(walls[i].position.y / 16) === y
+			) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

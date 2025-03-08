@@ -72,7 +72,8 @@ export class DrunkardWalkLevel extends Level {
 			// console.log("START this.addWallSprites")
 			this.addWallSprites(floorPlan, params);
 			// console.log("END this.addWallSprites");
-			for (var i = 0; i < params.rooms; i++) {
+			// console.log(Math.max(params.rooms ?? 1));
+			for (var i = 0; i < Math.max(params.rooms ?? 0, 1); i++) {
 				
 				// console.log("START this.addVases");
 				this.addVases(floorPlan, params);
@@ -311,7 +312,6 @@ export class DrunkardWalkLevel extends Level {
 		if (spot === undefined) return;
 		spot.x += gridCells(1);
 		spot.y += gridCells(1);
-		console.log(spot);
 		this.addGameObject(new Vase(spot.x, spot.y, undefined, params.seed));
 		this.walls.add(`${spot.x}, ${spot.y}`);
 	}
@@ -330,7 +330,6 @@ export class DrunkardWalkLevel extends Level {
 	}
 
 	addBookshelves(params) {
-		// console.log(this, this.seed, this.floors, this.gameObjects, gridCells(3));
 		const spaceAround = new Vector2(gridCells(4), gridCells(3));
 		const spot = this.findRandomSpot(this.seed, this.floors, this.gameObjects, spaceAround);
 		if (spot === undefined) return;

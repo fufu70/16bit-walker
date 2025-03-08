@@ -38,7 +38,6 @@ export class Vase extends GameObject {
 
 		if (seed !== undefined) {
 			style = VASE_STYLES[Math.floor(seed() * 6)];
-			console.log(style)
 		}
 
 		this.addChild(new Sprite({

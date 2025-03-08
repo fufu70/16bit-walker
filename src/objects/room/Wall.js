@@ -45,9 +45,16 @@ export class Wall extends GameObject {
 }
 
 export class WallFactory {
+	static cache = new Map();
+
 	static generate(params) {
+		if (WallFactory.cache.has(JSON.stringify(params))) {
+			WallFactory.cache.get(JSON.stringify(params));
+		}
 		let {floorPlan, seed, style} = params;
-		return new WallFactory().get(floorPlan, seed, style);
+		const walls = new WallFactory().get(floorPlan, seed, style);
+		WallFactory.cache.set(JSON.stringify(params), walls);
+		return walls;
 	}
 
 	get(floorPlan, seed, style) {
@@ -63,7 +70,6 @@ export class WallFactory {
 				if (!(floorPlan.get(x, y + 1) > 0 && floorPlan.get(x, y) == 0)) {
 					continue;
 				}
-
 
 				let orientation = OrientationFactory.getOrientation(x, y, floorPlan);
 				if (orientation === undefined) {

@@ -6,10 +6,10 @@ export class WalkFactoryQuery {
 
 	static WIDTH = 100;
 	static HEIGHT = 100;
-	static MAX_STEPS = 1000;
+	static MAX_STEPS = 600;
 	static STEP_SIZE = 1;
 	static SEED = 9;
-	static ROTATION_CHANGES = 10;
+	static ROTATION_CHANGES = 100;
 	static ROOMS = 1;
 	static ROOM_PARAMS = {
 		stepSize: 5,

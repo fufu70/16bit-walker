@@ -35,8 +35,6 @@ export class Television extends GameObject {
 
 		if (seed !== undefined) {
 			style = TELEVISION_STYLES[Math.floor(seed() * TELEVISION_STYLES.length)];
-
-			console.log("NOT DEFINED", style);
 		}
 
 		this.addChild(new Sprite({

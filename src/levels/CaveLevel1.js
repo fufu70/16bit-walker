@@ -11,6 +11,11 @@ import {Hero} from '../objects/hero/Hero.js';
 import {Rod} from '../objects/rod/Rod.js';
 import {Exit} from '../objects/exit/Exit.js';
 import {Npc} from '../objects/npc/Npc.js';
+import {Adam} from '../objects/npc/Adam.js';
+import {Alex} from '../objects/npc/Alex.js';
+import {Amelia} from '../objects/npc/Amelia.js';
+import {Bob} from '../objects/npc/Bob.js';
+import {Knight} from '../objects/npc/Knight.js';
 import {OutdoorLevel1} from './OutdoorLevel1.js';
 import {DrunkardWalkLevel} from './DrunkardWalkLevel.js';
 import {TALKED_TO_A, TALKED_TO_B} from '../StoryFlags.js';
@@ -47,7 +52,7 @@ export class CaveLevel1 extends Level {
 		const rod = new Rod(gridCells(7), gridCells(5));
 		this.addChild(rod);
 
-		const npc1 = new Npc(gridCells(5), gridCells(5), {
+		const npc1 = new Bob(gridCells(5), gridCells(5), {
 			content: [
 				{
 					string: "I just can't stand that guy",
@@ -63,19 +68,17 @@ export class CaveLevel1 extends Level {
 					string: "Grumble grumble. Another day at work.",
 					requires: []
 				},
-			],
-			portraitFrame: 1
+			]
 		});
 		this.addChild(npc1);
 
-		const npc2 = new Npc(gridCells(8), gridCells(5), {
+		const npc2 = new Knight(gridCells(8), gridCells(5), {
 			content: [
 				{
 					string: "What a wonderful day at work in the cave!",
 					addsFlag: TALKED_TO_B
 				},
-			],
-			portraitFrame: 0
+			]
 		});
 		this.addChild(npc2);
 
