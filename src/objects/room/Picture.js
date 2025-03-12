@@ -48,4 +48,10 @@ export class Picture extends GameObject {
 			frame: PICTURE[style]
 		}));
 	}
+
+	getContent() {
+		return {
+			string: "My dog could draw better than that!",
+		}
+	}
 }

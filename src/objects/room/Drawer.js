@@ -42,4 +42,10 @@ export class Drawer extends GameObject {
 
 		this.drawLayer = "DRAWER";
 	}
+
+	getContent() {
+		return {
+			string: "A drawer filled with junk. It belongs on a hoarders show.",
+		}
+	}
 }

@@ -47,4 +47,10 @@ export class Television extends GameObject {
 		}));
 		this.size = new Vector2(gridCells(2), gridCells(1))
 	}
+
+	getContent() {
+		return {
+			string: "I wonder what's playing on the TV",
+		}
+	}
 }

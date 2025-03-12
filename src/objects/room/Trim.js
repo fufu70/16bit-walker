@@ -130,30 +130,25 @@ export class TrimFactory {
 	}
 
 	get(floorPlan, walls) {
-		const trims = [];	
-		for (let x = -1; x < floorPlan.width() + 1; x ++) {
-			for (let y = -1; y < floorPlan.height() + 1; y ++) {
-
+		const trims = [];
+		floorPlan.traverse({
+			callback: (x, y, matrixValue) => {
 				if (
-					!(floorPlan.get(x, y) == 0)
-					|| this.isWall(x, y, walls)
+					matrixValue != 0 || this.isWall(x, y, walls)
 				) {
-					continue;
+					return;
 				}
 
 				let orientations = OrientationFactory.getOrientations(x, y, floorPlan);
 				if (orientations === undefined) {
-					continue;
+					return;
 				}
-				// console.log("orientation", orientation);
-				// const fpMatrixExtract = floorPlan.extract(x - 1, y - 1, 3, 3).compare(0);
-
-				// console.log(fpMatrixExtract.toString());
 				for (var i = 0; i < orientations.length; i++) {
 					trims.push(new Trim(gridCells(x), gridCells(y), orientations[i]));
 				}
-			}
-		}
+			},
+			padding: 2
+		});
 
 		return trims;
 	}

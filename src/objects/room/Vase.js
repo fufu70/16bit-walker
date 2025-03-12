@@ -53,4 +53,10 @@ export class Vase extends GameObject {
 			frame: VASE[style]
 		}));
 	}
+
+	getContent() {
+		return {
+			string: "Huh, just a Vase",
+		}
+	}
 }

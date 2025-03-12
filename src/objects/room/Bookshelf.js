@@ -66,4 +66,10 @@ export class Bookshelf extends GameObject {
 
 		this.drawLayer = "BOOKSHELF";
 	}
+
+	getContent() {
+		return {
+			string: "Book Book, go away, now what will I read today.",
+		}
+	}
 }

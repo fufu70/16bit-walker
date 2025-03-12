@@ -25,7 +25,10 @@ export class Wall extends GameObject {
 		super({
 			position: new Vector2(x, y)
 		});
-		this.drawLayer = 'WALL'
+		this.drawLayer = 'WALL';
+		if (WALLS[style][orientation] === undefined || WALLS[style][orientation]["TopWall"]=== undefined) {
+			console.error("ERROR for WALL", style, orientation);
+		}
 		const topWall = new Sprite({
 			resource: resources.images.shopFloor,
 			hFrames: 17,
@@ -48,12 +51,12 @@ export class WallFactory {
 	static cache = new Map();
 
 	static generate(params) {
-		if (WallFactory.cache.has(JSON.stringify(params))) {
-			WallFactory.cache.get(JSON.stringify(params));
+		if (WallFactory.cache.has(JSON.stringify(params.floorPlan))) {
+			WallFactory.cache.get(JSON.stringify(params.floorPlan));
 		}
 		let {floorPlan, seed, style} = params;
 		const walls = new WallFactory().get(floorPlan, seed, style);
-		WallFactory.cache.set(JSON.stringify(params), walls);
+		WallFactory.cache.set(JSON.stringify(params.floorPlan), walls);
 		return walls;
 	}
 
@@ -63,25 +66,24 @@ export class WallFactory {
 		}
 
 		const walls = [];
-
-		for (let x = -1; x < floorPlan.width(); x ++) {
-			for (let y = -1; y < floorPlan.height(); y ++) {
-
-				if (!(floorPlan.get(x, y + 1) > 0 && floorPlan.get(x, y) == 0)) {
-					continue;
+		floorPlan.traverse({
+			callback: (x, y, matrixValue) => {
+				if (!(floorPlan.get(x, y + 1) > 0 && matrixValue == 0)) {
+					return;
 				}
 
 				let orientation = OrientationFactory.getOrientation(x, y, floorPlan);
 				if (orientation === undefined) {
-					continue;
+					return;
 				}
 				// console.log("orientation", orientation);
 				const fpMatrixExtract = floorPlan.extract(x - 1, y - 1, 3, 3).compare(0);
 
 				// console.log(fpMatrixExtract.toString());
 				walls.push(new Wall(gridCells(x), gridCells(y), orientation, style));
-			}
-		}
+			},
+			padding: 2
+		});
 
 		return walls;
 	}

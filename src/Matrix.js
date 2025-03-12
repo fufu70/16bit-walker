@@ -6,8 +6,10 @@ export class Matrix {
 
 	constructor(matrix = {}) {
 		this.matrix = matrix;
-		this._width = this.calculateWidth();
-		this._height = this.calculateHeight();
+		this._yStart = this.yStart();
+		this._xStart = this.xStart();
+		this._width = this.width();
+		this._height = this.height();
 	}
 
 	add(x, y, value) {
@@ -20,6 +22,8 @@ export class Matrix {
 	}
 
 	clearSize() {
+		this._xStart = undefined;
+		this._yStart = undefined;
 		this._width = undefined;
 		this._height = undefined;
 	}
@@ -32,7 +36,7 @@ export class Matrix {
 	}
 
 	width() {
-		if (this._width) {
+		if (this._width !== undefined) {
 			return this._width;	
 		}
 		const a = this.calculateWidth();
@@ -42,7 +46,10 @@ export class Matrix {
 
 	calculateWidth() {
 		let max = 0;
-		for (let a = 0; a < this.height(); a ++) {
+		for (let a = this.yStart(); a < this.height(); a ++) {
+			if (this.matrix[a] === undefined) {
+				break;
+			}
 			const rowMax = Object.keys(this.matrix[a]).reduce((curr, next) => {
 				curr = Number(curr);
 				next = Number(next);
@@ -55,11 +62,12 @@ export class Matrix {
 				max = rowMax;
 			}
 		}
+
 		return max + 1;
 	}
 
 	height() {
-		if (this._height) {
+		if (this._height !== undefined) {
 			return this._height;	
 		}
 		const a = this.calculateHeight();
@@ -71,9 +79,35 @@ export class Matrix {
 		return Object.keys(this.matrix).length;
 	}
 
+	xStart() {
+		if (this._xStart !== undefined) {
+			return this._xStart;
+		}
+		const a = this.calculateXStart();
+		this._xStart = a;
+		return this._xStart;
+	}
+
+	calculateXStart() {
+		return 0;
+	}
+
+	yStart() {
+		if (this._yStart !== undefined) {
+			return this._yStart;
+		}
+		const a = this.calculateYStart();
+		this._yStart = a;
+		return this._yStart;
+	}
+
+	calculateYStart() {
+		return Math.min(...Object.keys(this.matrix));
+	}
+
 	matches(b) {
-		for (let y = 0; y < this.height(); y ++) {
-			for (let x = 0; x < this.width(); x ++) {
+		for (let y = this.yStart(); y < this.height(); y ++) {
+			for (let x = this.xStart(); x < this.width(); x ++) {
 				if (this.get(x,y) === SKIP || b.get(x,y) === SKIP) {
 					continue;
 				}
@@ -86,20 +120,34 @@ export class Matrix {
 		return true;
 	}
 
-	compare(value) {
+	traverse({callback, callbackEachRow, padding}) {
+		if (padding === undefined) {
+			padding = 0;
+		}
+		for (let y = this.yStart() - padding; y < this.height() + padding; y ++) {
+			for (let x = this.xStart() - padding; x < this.width() + padding; x ++) {
+				callback(x, y, this.get(x, y));
+			}
+			if (callbackEachRow !== undefined) {
+				callbackEachRow(y);	
+			}
+		}
+	}
+
+	compare(compareValue) {
 		let m = new Matrix([]);
 
-		for (let y = 0; y < this.height(); y ++) {
-			for (let x = 0; x < this.width(); x ++) {
-				if (this.get(x, y) === value) {
+		this.traverse({
+			callback: (x, y, matrixValue) => {
+				if (matrixValue === compareValue) {
 					m.add(x, y, 0);
-				} else if (this.get(x, y) > value) {
+				} else if (matrixValue > compareValue) {
 					m.add(x, y, 1);
-				} else if (this.get(x, y) < value) {
+				} else if (matrixValue < compareValue) {
 					m.add(x, y, -1);
 				}
 			}
-		}
+		})
 		return m;
 	}
 
@@ -120,12 +168,15 @@ export class Matrix {
 	toString() {
 		let str = "";
 
-		for (let y = 0; y < this.height(); y ++) {
-			for (let x = 0; x < this.width(); x ++) {
-				str += "\t" + this.get(x, y);
+		this.traverse({
+			callback: (x, y, value) => {
+				str += "\t" + this.get(x, y)
+			},
+			callbackEachRow: (y) => {
+				str += "\n";
 			}
-			str += "\n";
-		}
+		});
+
 		return str;
 	}
 

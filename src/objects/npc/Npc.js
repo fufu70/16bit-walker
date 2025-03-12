@@ -48,7 +48,7 @@ export class Npc extends GameObject {
 
 		return {
 			portraitFrame: this.portraitFrame,
-			string: match.string,
+			string: match.stringFunc ? match.stringFunc() : match.string,
 			addFlags: match.addsFlag ?? null
 		}
 	}

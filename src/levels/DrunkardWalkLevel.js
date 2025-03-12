@@ -59,7 +59,8 @@ export class DrunkardWalkLevel extends Level {
 
 			const heroStart = params.heroPosition ?? this.findHighestPosition(floorPlan);
 			this.addPreviousLevelExit(heroStart);
-			this.addHero(heroStart);;
+			this.addHero(heroStart);
+			this.beforeGeneratingSprites();
 
 			// console.log("START this.addFloorSprites");
 			this.addFloorSprites(this.floorPlan, params);
@@ -101,6 +102,10 @@ export class DrunkardWalkLevel extends Level {
 		}
 	}
 
+	beforeGeneratingSprites() {
+		// leave blank
+	}
+
 	addNextLevelExit() {
 		this.drunkWalkExitPosition = this.findFirstPosition(this.floorPlan);
 		this.addGameObject(new Exit(this.drunkWalkExitPosition.x, this.drunkWalkExitPosition.y));
@@ -115,11 +120,16 @@ export class DrunkardWalkLevel extends Level {
 	}
 
 	addFloorAroundPosition(position, floorPlan) {
+
+		console.log("position", position);
 		for (let x = position.x - gridCells(1); x <= position.x + gridCells(1); x += gridCells(1)) {
 			for (let y = position.y - gridCells(1); y <= position.y + gridCells(1); y += gridCells(1)) {
+				console.log("position", x, y);
 				floorPlan = this.addToFloorPlan(floorPlan, new Vector2(x, y));
 			}
 		}
+		console.log("position", position);
+		this.floorPlan.clearSize();
 		return floorPlan;
 	}
 
@@ -141,6 +151,10 @@ export class DrunkardWalkLevel extends Level {
 	addWall(wall) {
 		this.wallSprites.push(wall);
 		this.addChild(wall);
+	}
+
+	findSpotOnFloor(space) {
+		return this.findRandomSpot(this.seed, this.floors, this.gameObjects, space);
 	}
 
 	findRandomSpot(seed, floors, gameObjects, space = new Vector2(gridCells(1), gridCells(1))) {
@@ -250,23 +264,25 @@ export class DrunkardWalkLevel extends Level {
 				}
 			}
 		}
+		
 		return new Vector2(gridCells(max.x), gridCells(max.y));
 	}
 
 	addToFloorPlan(floorPlan, position) {
-		if (position.x < 0 || position.y < 0) return floorPlan;
+		// if (position.x < 0 || position.y < 0) return floorPlan;
 		floorPlan.add(Math.floor(position.x / 16), Math.floor(position.y / 16), 1);
 		return floorPlan;
 	}
 
 	getWalls(walls, floorPlan) {
-		for (let x = -1; x <= floorPlan.width(); x ++) {
-			for (let y = -1; y <= floorPlan.height(); y ++) {
-				if (floorPlan.get(x, y) == 0) {					
+		floorPlan.traverse({
+			callback: (x, y, matrixValue) => {
+				if (matrixValue == 0) {					
 					walls.add(`${gridCells(x)}, ${gridCells(y)}`);
 				}
-			}
-		}
+			},
+			padding: 2
+		});
 
 		return walls;
 	}
@@ -308,7 +324,7 @@ export class DrunkardWalkLevel extends Level {
 
 	addVases(floorPlan, params) {
 		const spaceAround = new Vector2(gridCells(3), gridCells(3));
-		const spot = this.findRandomSpot(this.seed, this.floors, this.gameObjects, spaceAround);
+		const spot = this.findSpotOnFloor(spaceAround);
 		if (spot === undefined) return;
 		spot.x += gridCells(1);
 		spot.y += gridCells(1);
@@ -331,7 +347,7 @@ export class DrunkardWalkLevel extends Level {
 
 	addBookshelves(params) {
 		const spaceAround = new Vector2(gridCells(4), gridCells(3));
-		const spot = this.findRandomSpot(this.seed, this.floors, this.gameObjects, spaceAround);
+		const spot = this.findSpotOnFloor(spaceAround);
 		if (spot === undefined) return;
 		spot.x += gridCells(1);
 		spot.y += gridCells(1);
@@ -344,7 +360,7 @@ export class DrunkardWalkLevel extends Level {
 	addDrawers(params) {
 		// console.log(this, this.seed, this.floors, this.gameObjects, gridCells(3));
 		const spaceAround = new Vector2(gridCells(4), gridCells(3));
-		const spot = this.findRandomSpot(this.seed, this.floors, this.gameObjects, spaceAround);
+		const spot = this.findSpotOnFloor(spaceAround);
 		if (spot === undefined) return;
 		spot.x += gridCells(1);
 		spot.y += gridCells(1);

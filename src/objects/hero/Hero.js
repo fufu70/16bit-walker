@@ -89,11 +89,14 @@ export class Hero extends GameObject {
 		const input = root.input;
 		if (input?.getActionJustPressed("Space")) {
 			// Look for an object at the next space (according to where Hero is facing)
-			const objAtPosition = this.parent.children.find(child => {
+			const objsAtPosition = this.parent.children.filter(child => {
 				return child.position.matches(this.position.toNeighbor(this.facingDirection));
 			})
-			if (objAtPosition) {
-				events.emit("HERO_REQUESTS_ACTION", objAtPosition);
+			if (objsAtPosition.length > 0) {
+				objsAtPosition.forEach(obj => {
+					events.emit("HERO_REQUESTS_ACTION", obj);	
+				});
+				
 			}
 		}
 

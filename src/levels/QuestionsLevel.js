@@ -1,5 +1,6 @@
 import {DrunkardWalkLevel} from './DrunkardWalkLevel.js';
 import {QuestionRod} from '../objects/rod/QuestionRod.js';
+import {NpcFactory} from '../objects/npc/NpcFactory.js';
 import {gridCells, GRID_SIZE, isSpaceFree} from '../helpers/Grid.js';
 import {Vector2} from "../Vector2.js";
 import {QUESTIONS} from './constants/CivicsQuestions.js';
@@ -21,14 +22,32 @@ export class QuestionsLevel extends DrunkardWalkLevel {
 					stepSize: 3,
 					maxSteps: 10,
 					rotationChanges: 1,
-				}
+				},
+				// heroPosition: new Vector2(0, 0)
 			});
-			this.questionsList = params.questions ?? [...QUESTIONS];
-			this.placeQuestionRod(this.findRandomSpot(this.seed, this.floors, this.gameObjects));
-			console.log("FLOOR", this.floorPlan.toString().replaceAll("0", " "));
 		} catch (e) {
 			console.error(e);
 		}
+	}
+
+	beforeGeneratingSprites() {
+		this.questionsList = this.params.questions ?? [...QUESTIONS];
+		this.questionsListSize = this.questionsList.length;
+		this.placeNpc(this.params);
+	}
+
+	placeNpc(params) {
+		this.placeQuestionRod(this.findSpotOnFloor());
+		console.log("FLOOR", this.floorPlan.toString().replaceAll("0", " "));
+		const loc = this.caveExitPosition.duplicate();
+		console.log(loc);
+		loc.x += gridCells(2);
+		loc.y += gridCells(-2);
+		this.floorPlan = this.addFloorAroundPosition(loc, this.floorPlan);
+		this.npc = NpcFactory.getRandom(loc, {
+			content: this.getContent(params, this.questionsList)
+		}, this.seed);
+		this.addGameObject(this.npc);
 	}
 
 	placeQuestionRod(vector) {
@@ -43,6 +62,46 @@ export class QuestionsLevel extends DrunkardWalkLevel {
 		} else {
 			this.addNextLevelExit();
 		}
+	}
+
+	getContent(params, questionsList) {
+		return [
+			{
+				stringFunc: () => {
+					return this.getLevelStatus();
+				},
+				requires: [`INTRODUCED_LEVEL ${params.levelTitle}`]
+			},
+			{
+				string: `Welcome to the ${params.levelTitle} level! I'm so excited to have you here. There's ${questionsList.length} questions to study from that are going to be on the test. Feel free to walk around and pickup the purple rods. Each rod holds a unique question, if answered correctly you get to keep the rod. Incorrect, and I steal a rod from you. Time to Study!`,
+				requires: [],
+				addsFlag: `INTRODUCED_LEVEL ${params.levelTitle}`
+			},
+		];
+	}
+
+	getLevelStatus() {
+		const amountCorrect = (this.questionsListSize - this.questionsList.length);
+		const percent = ((this.questionsListSize - this.questionsList.length) / this.questionsListSize).toFixed(2);
+
+		if (percent == 0) {
+			return "Let's try and pickup a purple rod to start studying ...";
+		}
+
+		if (percent == 1) {
+			return `You've done it! You've learned everything about the ${this.levelTitle} level. Time to go down the stairs to the next level!`;
+		}
+
+		let encouragement = "Baby Steps!";
+		if (percent > 0.3 && percent < 0.5) {
+			encouragement = "That's Great! Keep studying!";
+		} else if (percent > 0.5 && percent < 0.7) {
+			encouragement = `Mount Everest takes 58,070 steps. You've only taken 02`;
+		} else if (percent > 0.7 && percent < 1.0) {
+			encouragement = `Holy Mackeral!`;
+		}
+
+		return `You've answered ${amountCorrect} question${amountCorrect > 1 ? 's' : ''} so far. ${encouragement} Only ${this.questionsList.length} question${this.questionsList.length > 1 ? 's' : 0} left!`;
 	}
 
 	ready() {

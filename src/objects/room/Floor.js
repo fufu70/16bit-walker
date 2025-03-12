@@ -133,16 +133,15 @@ export class FloorFactory {
 
 		const floors = [];
 
-		
-		for (let x = 0; x < floorPlan.width(); x ++) {
-			for (let y = 0; y < floorPlan.height(); y ++) {
-				if (floorPlan.get(x, y) > 0) {
-
+		floorPlan.traverse({
+			callback: (x, y, matrixValue) => {
+				if (matrixValue > 0) {
 					let orientation = OrientationFactory.getOrientation(x, y, floorPlan);
 					floors.push(new Floor(gridCells(x), gridCells(y), style, orientation));
 				}
-			}
-		}
+			},
+			padding: 2
+		});
 
 		return floors;
 	}

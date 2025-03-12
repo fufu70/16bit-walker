@@ -105,47 +105,56 @@ export class OutdoorLevel1 extends Level {
 				const level1Params = {
 					seedNumber: seed1,
 					showNextLevel: true,
-					questions: [...PRINCIPLES_OF_AMERICAN_DEMOCRACY]
+					questions: [...PRINCIPLES_OF_AMERICAN_DEMOCRACY],
+					levelTitle: "PRINCIPLES_OF_AMERICAN_DEMOCRACY"
 				};
 				const level2Params = {
 					seedNumber: seed2,
 					showNextLevel: true,
-					questions: [...SYSTEM_OF_GOVERNMENT]
+					questions: [...SYSTEM_OF_GOVERNMENT],
+					levelTitle: "SYSTEM_OF_GOVERNMENT"
 				};
 				const level3Params = {
 					seedNumber: seed3,
 					showNextLevel: true,
-					questions: [...RIGHTS_AND_RESPONSIBILITIES]
+					questions: [...RIGHTS_AND_RESPONSIBILITIES],
+					levelTitle: "RIGHTS_AND_RESPONSIBILITIES"
 				};
 				const level4Params = {
 					seedNumber: seed4,
 					showNextLevel: true,
-					questions: [...COLONIAL_PERIOD_AND_INDEPENDENCE]
+					questions: [...COLONIAL_PERIOD_AND_INDEPENDENCE],
+					levelTitle: "COLONIAL_PERIOD_AND_INDEPENDENCE"
 				};
 				const level5Params = {
 					seedNumber: seed5,
 					showNextLevel: true,
-					questions: [...CENTURY_18]
+					questions: [...CENTURY_18],
+					levelTitle: "CENTURY_18"
 				};
 				const level6Params = {
 					seedNumber: seed6,
 					showNextLevel: true,
-					questions: [...RECENT_AMERICAN_HISTORY]
+					questions: [...RECENT_AMERICAN_HISTORY],
+					levelTitle: "RECENT_AMERICAN_HISTORY"
 				};
 				const level7Params = {
 					seedNumber: seed7,
 					showNextLevel: true,
-					questions: [...GEOGRAPHY]
+					questions: [...GEOGRAPHY],
+					levelTitle: "GEOGRAPHY"
 				};
 				const level8Params = {
 					seedNumber: seed8,
 					showNextLevel: true,
-					questions: [...SYMBOLS]
+					questions: [...SYMBOLS],
+					levelTitle: "SYMBOLS"
 				};
 				const level9Params = {
 					seedNumber: seed9,
 					showNextLevel: true,
 					questions: [...HOLIDAYS],
+					levelTitle: "HOLIDAYS",
 					nextLevel: () => {
 						return new CaveLevel1({
 							heroPosition: new Vector2(gridCells(10), gridCells(5))
