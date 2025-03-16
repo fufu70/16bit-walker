@@ -236,7 +236,7 @@ export class DrunkardWalkLevel extends Level {
 				gameObjects[i].position.y
 			);
 			// console.log(gameObjects[i].drawLayer, maxX);
-			if (gameObjects[i].position.matches(obj.position)
+			if (gameObjects[i].hasPosition(obj.position)
 				|| maxX.matches(obj.position)) {
 				return true;
 			}
