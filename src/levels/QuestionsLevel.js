@@ -25,6 +25,7 @@ export class QuestionsLevel extends DrunkardWalkLevel {
 				},
 				// heroPosition: new Vector2(0, 0)
 			});
+
 		} catch (e) {
 			console.error(e);
 		}
@@ -73,7 +74,7 @@ export class QuestionsLevel extends DrunkardWalkLevel {
 				requires: [`INTRODUCED_LEVEL ${params.levelTitle}`]
 			},
 			{
-				string: `Welcome to the ${params.levelTitle} level! I'm so excited to have you here. There's ${questionsList.length} questions to study from that are going to be on the test. Feel free to walk around and pickup the purple rods. Each rod holds a unique question, if answered correctly you get to keep the rod. Incorrect, and I steal a rod from you. Time to Study!`,
+				string: `Welcome to the ${params.levelTitle} level! I'm so excited to have you here. There's ${questionsList.length} questions to study from that are going to be on the test. Feel free to walk around and pickup the purple rods. Each rod holds a unique question, if answered correctly you get to keep the rod. Come to me anytime and ask me about your progress. Time to Study!`,
 				requires: [],
 				addsFlag: `INTRODUCED_LEVEL ${params.levelTitle}`
 			},

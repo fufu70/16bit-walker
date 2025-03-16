@@ -30,7 +30,8 @@ TELEVISION[OFF] = 4;
 export class Television extends GameObject {
 	constructor(x, y, style = NEWS, seed = undefined) {
 		super({
-			position: new Vector2(x, y)
+			position: new Vector2(x, y),
+			size: new Vector2(GRID_SIZE * 2, GRID_SIZE)
 		});
 
 		if (seed !== undefined) {
@@ -45,7 +46,6 @@ export class Television extends GameObject {
 			vFrames: 6,
 			frame: TELEVISION[style]
 		}));
-		this.size = new Vector2(gridCells(2), gridCells(1))
 	}
 
 	getContent() {

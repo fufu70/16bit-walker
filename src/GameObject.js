@@ -3,14 +3,14 @@ import {events} from './Events.js';
 import {GRID_SIZE} from './helpers/Grid.js'
 
 export class GameObject {
-	constructor({position}) {
+	constructor({position, size, isSolid}) {
 		this.position = position ?? new Vector2(0, 0);
 		this.children = [];
 		this.parent = null;
 		this.hasReadyBeenCalled = false;
-		this.isSolid = false;
+		this.isSolid = isSolid ?? false;
 		this.drawLayer = null;
-		this.size = new Vector2(GRID_SIZE, GRID_SIZE);
+		this.size = size ?? new Vector2(GRID_SIZE, GRID_SIZE);
 	}
 
 	stepEntry(delta, root) {
@@ -54,21 +54,15 @@ export class GameObject {
 	getDrawChildrenOrdered() {
 		const floors = this.children.filter(a => a.drawLayer === 'FLOOR');
 		const exits = this.children.filter(a => a.drawLayer === 'EXIT');
-		const walls = this.children.filter(a => a.drawLayer === 'WALL');
 		const nonFloors = this.children.filter(a => 
 			a.drawLayer !== 'FLOOR' 
 			&& a.drawLayer !== 'EXIT' 
-			// && a.drawLayer !== 'WALL'
 		);
 
-		// console.log(nonFloors.map(a => a.drawLayer))
-		// console.log(this.orderByVertical(nonFloors).map(a => a.drawLayer))
-		// console.log(this.orderByWall(this.orderByVertical(nonFloors)).map(a => a.drawLayer))
 
 		return [
 			...this.orderByVertical(floors),
 			...this.orderByVertical(exits),
-			// ...this.orderByVertical(walls),
 			...this.orderByVertical(nonFloors),
 		]
 	}
@@ -115,5 +109,16 @@ export class GameObject {
 		this.children = this.children.filter(g => {
 			return gameObject !== g;
 		})
+	}
+
+	hasPosition(vector2) {
+		for (var x = 0; x < this.size.x; x += GRID_SIZE) {
+			for (var y = 0; y < this.size.y; y += GRID_SIZE) {
+				if (vector2.matches(new Vector2(this.position.x + x, this.position.y + y))) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }

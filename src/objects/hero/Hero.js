@@ -88,16 +88,7 @@ export class Hero extends GameObject {
 		// Check for input
 		const input = root.input;
 		if (input?.getActionJustPressed("Space")) {
-			// Look for an object at the next space (according to where Hero is facing)
-			const objsAtPosition = this.parent.children.filter(child => {
-				return child.position.matches(this.position.toNeighbor(this.facingDirection));
-			})
-			if (objsAtPosition.length > 0) {
-				objsAtPosition.forEach(obj => {
-					events.emit("HERO_REQUESTS_ACTION", obj);	
-				});
-				
-			}
+			this.onActionPressed();
 		}
 
 
@@ -108,6 +99,19 @@ export class Hero extends GameObject {
 		}
 
 		this.tryEmitPosition();
+	}
+
+	onActionPressed() {
+		// Look for an object at the next space (according to where Hero is facing)
+		const objsAtPosition = this.parent.children.filter(child => {
+			return child.hasPosition(this.position.toNeighbor(this.facingDirection));
+		})
+		if (objsAtPosition.length > 0) {
+			objsAtPosition.forEach(obj => {
+				events.emit("HERO_REQUESTS_ACTION", obj);	
+			});
+			
+		}
 	}
 
 	tryEmitPosition() {
@@ -166,7 +170,7 @@ export class Hero extends GameObject {
 
 		const spaceIsFree = isSpaceFree(root.level?.walls, nextX, nextY);
 		const solidBodyAtSpace = this.parent.children.find(c => {
-			return c.isSolid && c.position.x === nextX && c.position.y === nextY
+			return c.isSolid && c.hasPosition(new Vector2(nextX, nextY))
 		});
 
 		if (spaceIsFree && !solidBodyAtSpace) {

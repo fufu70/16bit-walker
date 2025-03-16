@@ -33,7 +33,8 @@ VASE[GREEN_DIAGONAL] = 5;
 export class Vase extends GameObject {
 	constructor(x, y, style = BLUE_DIAGONAL, seed = undefined) {
 		super({
-			position: new Vector2(x, y)
+			position: new Vector2(x, y),
+			isSolid: true
 		});
 
 		if (seed !== undefined) {

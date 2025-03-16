@@ -24,7 +24,9 @@ DRAWER[BROWN_MID] = 2;
 export class Drawer extends GameObject {
 	constructor(x, y, style = LIGHT_BROWN_FULL, seed = undefined) {
 		super({
-			position: new Vector2(x, y)
+			position: new Vector2(x, y),
+			size: new Vector2(GRID_SIZE * 2, GRID_SIZE),
+			isSolid: true
 		});
 
 		if (seed !== undefined) {

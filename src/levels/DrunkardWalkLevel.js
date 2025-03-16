@@ -329,7 +329,6 @@ export class DrunkardWalkLevel extends Level {
 		spot.x += gridCells(1);
 		spot.y += gridCells(1);
 		this.addGameObject(new Vase(spot.x, spot.y, undefined, params.seed));
-		this.walls.add(`${spot.x}, ${spot.y}`);
 	}
 
 	addPictures(params) {
@@ -352,9 +351,6 @@ export class DrunkardWalkLevel extends Level {
 		spot.x += gridCells(1);
 		spot.y += gridCells(1);
 		this.addGameObject(new Bookshelf(spot.x, spot.y, undefined, params.seed));
-
-		this.walls.add(`${spot.x}, ${spot.y}`);
-		this.walls.add(`${spot.x + gridCells(1)}, ${spot.y}`);
 	}
 
 	addDrawers(params) {
@@ -365,9 +361,6 @@ export class DrunkardWalkLevel extends Level {
 		spot.x += gridCells(1);
 		spot.y += gridCells(1);
 		this.addGameObject(new Drawer(spot.x, spot.y, undefined, params.seed));
-
-		this.walls.add(`${spot.x}, ${spot.y}`);
-		this.walls.add(`${spot.x + gridCells(1)}, ${spot.y}`);
 	}
 
 	getOrientation(x, y, floorPlan) {
