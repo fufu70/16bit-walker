@@ -17,7 +17,7 @@ export class TextInput extends UserInputBox {
 	constructor(config = {}) {
 		super(config);
 
-		this.cursor = this.getCharacterSprite("|", getCharacterAnimations("|"));
+		this.cursor = this.typewriter.getCharacterSprite("|", getCharacterAnimations("|"));
 		this.cursor.animations.play("BLINKING");
 		this.addChild(this.cursor);
 
@@ -60,8 +60,8 @@ export class TextInput extends UserInputBox {
 		cursorX = 59;
 		cursorY += 16;
 
-		this.generateWords(this.userInput).forEach(word => {
-			const cursorPosition = this.drawWord(ctx, drawPosX, cursorX, cursorY, currentShowingIndex, word);
+		this.typewriter.generateWords(this.userInput).forEach(word => {
+			const cursorPosition = this.typewriter.drawWord(ctx, drawPosX, cursorX, cursorY, currentShowingIndex, word);
 			cursorX = cursorPosition.cursorX;
 			cursorY = cursorPosition.cursorY;
 			currentShowingIndex = cursorPosition.currentShowingIndex;

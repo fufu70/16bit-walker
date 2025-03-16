@@ -23,7 +23,7 @@ export class SelectInput extends UserInputBox {
 			return a.toUpperCase().localeCompare(b.toUpperCase());
 		});
 		this.selectedOptionIndex = 0;
-		this.triangle = this.getCharacterSprite("▶");
+		this.triangle = this.typewriter.getCharacterSprite("▶");
 		this.stepToNextMove = 100;
 		this.lastMove = this.stepToNextMove;
 
@@ -82,7 +82,7 @@ export class SelectInput extends UserInputBox {
 	}
 
 	addTriangle() {
-		if (this.showingIndex >= this.finalIndex && !this.hasChild(this.triangle)) {
+		if (this.typewriter.showingIndex >= this.typewriter.finalIndex && !this.hasChild(this.triangle)) {
 			this.addChild(this.triangle);
 		}
 	}
@@ -107,15 +107,15 @@ export class SelectInput extends UserInputBox {
 				triangleY = cursorY;
 			}
 
-			this.generateWords(option).forEach(word => {
-				const cursorPosition = this.drawWord(ctx, drawPosX, cursorX, cursorY, currentShowingIndex, word);
+			this.typewriter.generateWords(option).forEach(word => {
+				const cursorPosition = this.typewriter.drawWord(ctx, drawPosX, cursorX, cursorY, currentShowingIndex, word);
 				cursorX = cursorPosition.cursorX;
 				cursorY = cursorPosition.cursorY;
 				currentShowingIndex = cursorPosition.currentShowingIndex;
 			});
 		});
 
-		if (currentShowingIndex >= this.finalIndex) {
+		if (currentShowingIndex >= this.typewriter.finalIndex) {
 			this.drawTriangle(triangleY);
 		}
 	}

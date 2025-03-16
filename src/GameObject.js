@@ -45,8 +45,8 @@ export class GameObject {
 		this.getDrawChildrenOrdered().forEach((child )=> {
 			try {
 				child.draw(ctx, drawPosX, drawPosY);
-			} catch {
-				console.log(child);
+			} catch (e) {
+				console.error(e);
 			}
 		})
 	}

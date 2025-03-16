@@ -6,6 +6,7 @@ import {Vector2} from "../Vector2.js";
 import {QUESTIONS} from './constants/CivicsQuestions.js';
 import {OutdoorLevel1} from './OutdoorLevel1.js';
 import {events} from '../Events.js';
+import {resources} from '../Resources.js';
 
 export class QuestionsLevel extends DrunkardWalkLevel {
 	constructor(params={}) {
@@ -116,6 +117,9 @@ export class QuestionsLevel extends DrunkardWalkLevel {
 		});
 
 		events.on("HERO_ANSWERED_INCORRECTLY", this, (question) => {
+			events.emit("HERO_LOSES_ITEM", {
+				image: resources.images.rod
+			});
 			this.placeQuestionRod(this.findRandomSpot(this.seed, this.floors, this.gameObjects));
 		});
 	}

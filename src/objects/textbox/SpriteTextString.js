@@ -75,7 +75,6 @@ export class SpriteTextString extends GameObject {
 		this.textSpeed = 40;
 		this.timeUntilNextShow = this.textSpeed;
 
-
 		events.emit("START_TEXT_BOX");
 	}
 

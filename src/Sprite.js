@@ -26,6 +26,20 @@ export class Sprite extends GameObject {
 		this.buildFrameMap();
 	}
 
+	clone() {
+		return new Sprite({
+			resource: this.resource,
+			frameSize: this.frameSize,
+			hFrames: this.hFrames,
+			vFrames: this.vFrames,
+			frame: this.frame,
+			frameMap: this.frameMap,
+			scale: this.scale,
+			position: this.position,
+			animations: this.animations,
+		});
+	}
+
 	buildFrameMap() {
 		let frameCount = 0;
 		for (let v = 0; v < this.vFrames; v ++) {
