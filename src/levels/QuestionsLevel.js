@@ -26,7 +26,7 @@ export class QuestionsLevel extends DrunkardWalkLevel {
 				},
 				// heroPosition: new Vector2(0, 0)
 			});
-
+			events.emit("HERO_REQUESTS_ACTION", this.npc);
 		} catch (e) {
 			console.error(e);
 		}
