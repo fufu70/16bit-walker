@@ -1,4 +1,4 @@
-import {GameObject} from "../../GameObject.js";
+import {HudGameObject} from "../../HudGameObject.js";
 import {Vector2} from "../../Vector2.js";
 import {Sprite} from '../../Sprite.js';
 import {moveTowards} from '../../helpers/Move.js';
@@ -15,7 +15,7 @@ const PADDING_TOP = 6;
 const LINE_WIDTH_MAX = 240;
 const LINE_VERTICAL_HEIGHT = 14;
 
-export class SpriteTextString extends GameObject {
+export class SpriteTextString extends HudGameObject {
 
 	constructor(config = {}) {
 		super({
@@ -40,7 +40,8 @@ export class SpriteTextString extends GameObject {
 						resource: resources.images.fontWhite,
 						hFrames: 13,
 						vFrames: 6,
-						frame: getCharacterFrame(char)
+						frame: getCharacterFrame(char),
+						alwaysRender: true
 					})
 				}
 			})
@@ -54,7 +55,8 @@ export class SpriteTextString extends GameObject {
 		});
 		this.background = new Sprite({
 			resource: resources.images.textBox,
-			frameSize: new Vector2(256, 64)
+			frameSize: new Vector2(256, 64),
+			alwaysRender: true
 		});
 
 		// Create a portrait
@@ -62,7 +64,8 @@ export class SpriteTextString extends GameObject {
 			resource: resources.images.portraits,
 			hFrames: 2,
 			vFrames: 3,
-			frame: config?.portraitFrame
+			frame: config?.portraitFrame,
+			alwaysRender: true
 		});
 
 		// Tyepwriter

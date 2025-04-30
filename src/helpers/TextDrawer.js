@@ -50,7 +50,8 @@ export class TextDrawer {
 			hFrames: 13,
 			vFrames: 6,
 			frame: getCharacterFrame(char),
-			animations: animations
+			animations: animations,
+			alwaysRender: true
 		});
 	}
 

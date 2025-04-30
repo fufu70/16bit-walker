@@ -4,12 +4,12 @@ import {LEFT, RIGHT, UP, DOWN} from '../Input.js';
 
 export class WalkFactoryQuery {
 
-	static WIDTH = 100;
-	static HEIGHT = 100;
-	static MAX_STEPS = 600;
+	static WIDTH = 500;
+	static HEIGHT = 500;
+	static MAX_STEPS = 800;
 	static STEP_SIZE = 1;
 	static SEED = 9;
-	static ROTATION_CHANGES = 200;
+	static ROTATION_CHANGES = 400;
 	static ROOMS = 1;
 	static ROOM_PARAMS = {
 		stepSize: 5,
@@ -22,11 +22,11 @@ export class WalkFactoryQuery {
 		this.params = params;
 		this.width = params.width ?? WalkFactoryQuery.WIDTH;
 		this.height = params.height ?? WalkFactoryQuery.HEIGHT;
-		this.maxSteps = params.maxSteps ?? WalkFactoryQuery.MAX_STEPS;
+		this.maxSteps = params.maxSteps ?? (this.width + this.height) * 2;
 		this.seed = params.seed ??  Math.seed(WalkFactoryQuery.SEED);
 		this.stepSize = params.stepSize ?? WalkFactoryQuery.STEP_SIZE;
-		this.rotationChanges = params.rotationChanges ?? WalkFactoryQuery.ROTATION_CHANGES;
-		this.rooms = params.rooms ?? WalkFactoryQuery.ROOMS;
+		this.rotationChanges = params.rotationChanges ?? this.maxSteps / 2;
+		this.rooms = params.rooms ?? this.maxSteps / 400;
 		this.roomParams = params.roomParams ?? WalkFactoryQuery.ROOM_PARAMS;
 		this.randomGenerator = Math.seed(params.seed());
 

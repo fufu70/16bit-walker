@@ -1,4 +1,4 @@
-import {GameObject} from "../../GameObject.js";
+import {HudGameObject} from "../../HudGameObject.js";
 import {Vector2} from "../../Vector2.js";
 import {Sprite} from '../../Sprite.js';
 import {moveTowards} from '../../helpers/Move.js';
@@ -9,7 +9,7 @@ import {events} from '../../Events.js';
 import {Typewriter} from '../../helpers/text/Typewriter.js';
 
 
-export class Inventory extends GameObject {
+export class Inventory extends HudGameObject {
 	items = [];
 
 	constructor() {

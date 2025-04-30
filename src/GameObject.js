@@ -3,7 +3,7 @@ import {events} from './Events.js';
 import {GRID_SIZE} from './helpers/Grid.js'
 
 export class GameObject {
-	constructor({position, size, isSolid}) {
+	constructor({position, size, isSolid, alwaysRender}) {
 		this.position = position ?? new Vector2(0, 0);
 		this.children = [];
 		this.parent = null;
@@ -11,6 +11,12 @@ export class GameObject {
 		this.isSolid = isSolid ?? false;
 		this.drawLayer = null;
 		this.size = size ?? new Vector2(GRID_SIZE, GRID_SIZE);
+		this.alwaysRender = alwaysRender ?? false;
+		this.updateRenderPosition(undefined);
+
+		events.on("HERO_POSITION", this, heroPosition => {
+			this.updateRenderPosition(heroPosition);
+		});
 	}
 
 	stepEntry(delta, root) {
@@ -120,5 +126,35 @@ export class GameObject {
 			}
 		}
 		return false;
+	}
+
+	updateRenderPosition(position) {
+		this.renderPosition = position;
+	}
+
+	inRenderView(x, y) {
+		let pos = this.renderPosition;
+		if (pos === undefined 
+			|| this.alwaysRender
+			|| this.drawLayer === 'HERO'
+			|| this.drawLayer === 'HUD'
+			|| this.drawLayer === 'LEVEL'
+		) {
+			return true;
+		}
+		// if (this.drawLayer !== 'ROD') {
+		// 	return true;
+		// }
+
+		const personHalf = 8;
+		const canvasWidth = 320 + 32;
+		const canvasHeight = 180 + 32;
+		const halfWidth = -personHalf + canvasWidth / 2;
+		const halfHeight = -personHalf + canvasHeight / 2;
+		// console.log(pos, halfWidth, x, this);
+		return x - halfWidth < pos.x
+			&& x + halfWidth > pos.x
+			&& y - halfHeight < pos.y
+			&& y + halfHeight > pos.y;
 	}
 }

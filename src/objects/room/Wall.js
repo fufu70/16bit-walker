@@ -28,6 +28,7 @@ export class Wall extends GameObject {
 		this.drawLayer = 'WALL';
 		if (WALLS[style][orientation] === undefined || WALLS[style][orientation]["TopWall"]=== undefined) {
 			console.error("ERROR for WALL", style, orientation);
+			return;
 		}
 		const topWall = new Sprite({
 			resource: resources.images.shopFloor,
@@ -55,7 +56,7 @@ export class WallFactory {
 			WallFactory.cache.get(JSON.stringify(params.floorPlan));
 		}
 		let {floorPlan, seed, style} = params;
-		const walls = new WallFactory().get(floorPlan, seed, style);
+		const walls = new (this.prototype.constructor)().get(floorPlan, seed, style);
 		WallFactory.cache.set(JSON.stringify(params.floorPlan), walls);
 		return walls;
 	}
@@ -68,7 +69,7 @@ export class WallFactory {
 		const walls = [];
 		floorPlan.traverse({
 			callback: (x, y, matrixValue) => {
-				if (!(floorPlan.get(x, y + 1) > 0 && matrixValue == 0)) {
+				if (!this.isWall(x, y, matrixValue, floorPlan)) {
 					return;
 				}
 
@@ -77,18 +78,36 @@ export class WallFactory {
 					return;
 				}
 				// console.log("orientation", orientation);
-				const fpMatrixExtract = floorPlan.extract(x - 1, y - 1, 3, 3).compare(0);
+				// const fpMatrixExtract = floorPlan.extract(x - 1, y - 1, 3, 3).compare(0);
 
 				// console.log(fpMatrixExtract.toString());
-				walls.push(new Wall(gridCells(x), gridCells(y), orientation, style));
+				walls.push(this.getWallSprite(x, y, orientation, style));
 			},
 			padding: 2
 		});
 
 		return walls;
 	}
+	
+	isWall(x, y, matrixValue, floorPlan) {
+
+	}
+
+	getWallSprite(x, y, orientation, style) {
+		
+	}
 
 	seedStyle(seed) {
 		return PATTERNS[Math.floor(PATTERNS.length * seed())];
+	}
+}
+
+export class RoomWallFactory extends WallFactory {
+	isWall(x, y, matrixValue, floorPlan) {
+		return floorPlan.get(x, y + 1) > 0 && matrixValue == 0
+	}
+
+	getWallSprite(x, y, orientation, style)  {
+		return new Wall(gridCells(x), gridCells(y), orientation, style);
 	}
 }

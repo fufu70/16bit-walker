@@ -7,7 +7,7 @@ import {Input, LEFT, RIGHT, UP, DOWN} from '../../Input.js';
 import {gridCells, GRID_SIZE, isSpaceFree} from '../../helpers/Grid.js'
 import {events} from '../../Events.js';
 import {OrientationFactory} from '../../helpers/orientation/OrientationFactory.js';
-import {WallFactory} from './Wall.js';
+import {RoomWallFactory} from './Wall.js';
 import {
 	NORTH_RIGHT,
 	NORTH,
@@ -125,7 +125,7 @@ export class TrimFactory {
 
 	static generate(params) {
 		let {floorPlan} = params;
-		let walls = WallFactory.generate(params);
+		let walls = RoomWallFactory.generate(params);
 		return new TrimFactory().get(floorPlan, walls);
 	}
 

@@ -1,4 +1,4 @@
-import {GameObject} from "../../GameObject.js";
+import {HudGameObject} from "../../HudGameObject.js";
 import {Vector2} from "../../Vector2.js";
 import {Sprite} from '../../Sprite.js';
 import {moveTowards} from '../../helpers/Move.js';
@@ -11,7 +11,7 @@ import {SUPPORTED_CHARACTERS} from '../textbox/spriteFontMap.js';
 import {Typewriter} from '../../helpers/text/Typewriter.js';
 
 
-export class UserInputBox extends GameObject {
+export class UserInputBox extends HudGameObject {
 	PADDING_LEFT = 27;
 	PADDING_TOP = 9;
 	LINE_WIDTH_MAX = 240;

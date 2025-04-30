@@ -17,7 +17,7 @@ import {Amelia} from '../objects/npc/Amelia.js';
 import {Bob} from '../objects/npc/Bob.js';
 import {Knight} from '../objects/npc/Knight.js';
 import {OutdoorLevel1} from './OutdoorLevel1.js';
-import {DrunkardWalkLevel} from './DrunkardWalkLevel.js';
+import {DrunkRoomLevel} from './DrunkRoomLevel.js';
 import {TALKED_TO_A, TALKED_TO_B} from '../StoryFlags.js';
 
 const DEFAULT_HERO_POSITION = new Vector2(gridCells(3), gridCells(3));
@@ -31,12 +31,14 @@ export class CaveLevel1 extends Level {
 		this.params = params;
 		this.background = new Sprite({
 			resource: resources.images.cave,
-			frameSize: new Vector2(320, 180)
+			frameSize: new Vector2(320, 180),
+			alwaysRender: true
 		});
 
 		const groundSprite = new Sprite({
 			resource: resources.images.caveGround,
 			frameSize: new Vector2(320, 180),
+			alwaysRender: true
 		});
 		groundSprite.drawLayer = "FLOOR";
 		this.addChild(groundSprite);
@@ -49,7 +51,7 @@ export class CaveLevel1 extends Level {
 		const hero = new Hero(heroStart.x, heroStart.y);
 		this.addChild(hero);
 
-		const rod = new Rod(gridCells(7), gridCells(5));
+		const rod = new Rod(gridCells(-7), gridCells(5));
 		this.addChild(rod);
 
 		const npc1 = new Bob(gridCells(5), gridCells(5), {
@@ -93,9 +95,9 @@ export class CaveLevel1 extends Level {
 				}));	
 			}
 			if (exit.position.matches(DRUNKWALK_EXIT)) {
-				events.emit("CHANGE_LEVEL", new DrunkardWalkLevel({
+				events.emit("CHANGE_LEVEL", new DrunkRoomLevel({
 					seed: Math.seed(Math.random()),
-					maxSteps: 10
+					// maxSteps: 10
 				}));	
 			}
 		});

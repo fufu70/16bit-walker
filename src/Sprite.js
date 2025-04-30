@@ -1,5 +1,6 @@
 import {Vector2} from './Vector2.js';
 import {GameObject} from './GameObject.js';
+import {events} from './Events.js';
 
 export class Sprite extends GameObject {
 	constructor({
@@ -10,9 +11,10 @@ export class Sprite extends GameObject {
 		frame,     // which frame we want to show
 		scale,     // how large to draw the image
 		position,  // x and y coordinates 
-		animations
+		animations,
+		alwaysRender
 	}) {
-		super({});
+		super({alwaysRender});
 
 		this.resource = resource;
 		this.frameSize = frameSize ?? new Vector2(16, 16);
@@ -63,6 +65,10 @@ export class Sprite extends GameObject {
 	}
 
 	drawImage(ctx, x, y) {
+		if (!this.inRenderView(x, y)) {
+			return;
+		}
+
 		if (!this.resource.isLoaded) {
 			return;
 		}

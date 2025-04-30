@@ -14,8 +14,10 @@ class Resources {
 			sky: "/sprites/sky.png",
 			cave: "/sprites/cave.png",
 			portraits: "/sprites/portraits-sheet.png",
-			knight: "/sprites/knight-sheet-1.png",
+			outdoors: "/sprites/outdoors.png",
+			greenBackground: "/sprites/green-background.png",
 
+			// modern interiors
 			shopBackground: "/sprites/shop-background.png",
 			shopFloor: "sprites/shop-assets/Room_Builder_free_16x16.png",
 			shopObjects: "sprites/shop-assets/Interiors_free_16x16.png",
@@ -25,6 +27,8 @@ class Resources {
 			bookshelf: "sprites/shop-assets/Bookshelf_16x16.png",
 			drawer: "sprites/shop-assets/Drawer_16x16.png",
 
+			//npcs
+			knight: "/sprites/knight-sheet-1.png",
 			adam: "sprites/npcs/Adam_16x16.png",
 			alex: "sprites/npcs/Alex_16x16.png",
 			amelia: "sprites/npcs/Amelia_16x16.png",

@@ -123,7 +123,7 @@ export class Floor extends GameObject {
 export class FloorFactory {
 	static generate(params) {
 		let {floorPlan, seed, style} = params;
-		return new FloorFactory().get(floorPlan, seed, style);
+		return new (this.prototype.constructor)().get(floorPlan, seed, style);
 	}
 
 	get(floorPlan, seed, style) {
@@ -137,7 +137,7 @@ export class FloorFactory {
 			callback: (x, y, matrixValue) => {
 				if (matrixValue > 0) {
 					let orientation = OrientationFactory.getOrientation(x, y, floorPlan);
-					floors.push(new Floor(gridCells(x), gridCells(y), style, orientation));
+					floors.push(this.getFloorSprite(x, y, style, orientation));
 				}
 			},
 			padding: 2
@@ -146,7 +146,17 @@ export class FloorFactory {
 		return floors;
 	}
 
+	getFloorSprite(x, y, style, orientation) {
+		// return new Floor(gridCells(x), gridCells(y), style, orientation);
+	}
+
 	seedStyle(seed) {
 		return PATTERNS[Math.floor(PATTERNS.length * seed())];
+	}
+}
+
+export class RoomFloorFactory extends FloorFactory {
+	getFloorSprite(x, y, style, orientation) {
+		return new Floor(gridCells(x), gridCells(y), style, orientation);
 	}
 }

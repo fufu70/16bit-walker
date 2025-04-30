@@ -11,14 +11,6 @@ import {Hero} from '../objects/hero/Hero.js';
 import {Rod} from '../objects/rod/Rod.js';
 import {Exit} from '../objects/exit/Exit.js';
 import {Npc} from '../objects/npc/Npc.js';
-import {Floor, FloorFactory} from '../objects/room/Floor.js';
-import {Wall, WallFactory} from '../objects/room/Wall.js';
-import {Trim, TrimFactory} from '../objects/room/Trim.js';
-import {Vase} from '../objects/room/Vase.js';
-import {Picture} from '../objects/room/Picture.js';
-import {Television} from '../objects/room/Television.js';
-import {Drawer} from '../objects/room/Drawer.js';
-import {Bookshelf} from '../objects/room/Bookshelf.js';
 import {OutdoorLevel1} from './OutdoorLevel1.js';
 import {CaveLevel1} from './CaveLevel1.js';
 import {TALKED_TO_A, TALKED_TO_B} from '../StoryFlags.js';
@@ -36,9 +28,10 @@ export class DrunkardWalkLevel extends Level {
 		console.log("PARAMS: ", params);
 		try {
 			this.params = params;
-			this.background = new Sprite({
+			this.background = params.background ?? new Sprite({
 				resource: resources.images.shopBackground,
-				frameSize: new Vector2(320, 180)
+				frameSize: new Vector2(320, 180),
+				alwaysRender: true
 			});
 
 			this.gameObjects = [];
@@ -62,37 +55,11 @@ export class DrunkardWalkLevel extends Level {
 			this.addHero(heroStart);
 			this.beforeGeneratingSprites();
 
-			// console.log("START this.addFloorSprites");
-			this.addFloorSprites(this.floorPlan, params);
-			// console.log("END this.addFloorSprites");
+			this.addFloors(this.floorPlan, params);
 
-			
-			// console.log("START this.addTrimSprites")
-			this.addTrimSprites(floorPlan, params);
-			// console.log("END this.addTrimSprites")
-			// console.log("START this.addWallSprites")
-			this.addWallSprites(floorPlan, params);
-			// console.log("END this.addWallSprites");
-			// console.log(Math.max(params.rooms ?? 1));
-			for (var i = 0; i < Math.max(params.rooms ?? 0, 1); i++) {
-				
-				// console.log("START this.addVases");
-				this.addVases(floorPlan, params);
-				// console.log("END this.addVases");
-				// console.log("START this.addPictures");
-				this.addPictures(params);
-				// console.log("END this.addPictures");
+			this.addWalls(this.floorPlan, params);
 
-				// console.log("START this.addTelevisions");
-				this.addTelevisions(params);
-				// console.log("END this.addTelevisions");
-				// console.log("START this.addBookshelves");
-				this.addBookshelves(params);
-				// console.log("END this.addBookshelves");
-				// console.log("START this.addDrawers");
-				this.addDrawers(params);
-				// console.log("END this.addDrawers");
-			}
+			this.addItems(this.floorPlan, params);
 
 			// console.log("START this.getWalls");
 			this.walls = this.getWalls(this.walls, floorPlan);
@@ -103,6 +70,18 @@ export class DrunkardWalkLevel extends Level {
 	}
 
 	beforeGeneratingSprites() {
+		// leave blank
+	}
+
+	addFloors(floorPlan, params) {
+		// leave blank
+	}
+	
+	addWalls(floorPlan, params) {
+		// leave blank
+	}
+	
+	addItems(floorPlan, params) {
 		// leave blank
 	}
 
@@ -121,14 +100,11 @@ export class DrunkardWalkLevel extends Level {
 
 	addFloorAroundPosition(position, floorPlan) {
 
-		console.log("position", position);
 		for (let x = position.x - gridCells(1); x <= position.x + gridCells(1); x += gridCells(1)) {
 			for (let y = position.y - gridCells(1); y <= position.y + gridCells(1); y += gridCells(1)) {
-				console.log("position", x, y);
 				floorPlan = this.addToFloorPlan(floorPlan, new Vector2(x, y));
 			}
 		}
-		console.log("position", position);
 		this.floorPlan.clearSize();
 		return floorPlan;
 	}
@@ -293,76 +269,6 @@ export class DrunkardWalkLevel extends Level {
 		return WalkFactory.getFloorPlan(query);
 	}
 
-	addFloorSprites(floorPlan, params) {
-		const floors = FloorFactory.generate({
-			floorPlan,
-			seed: params.seed
-		});
-		for (var i = floors.length - 1; i >= 0; i--) {
-			this.addFloor(floors[i]);
-		}
-	}
-
-	addWallSprites(floorPlan, params) {
-		const walls =  WallFactory.generate({
-			floorPlan,
-			seed: params.seed
-		});
-		for (var i = walls.length - 1; i >= 0; i--) {
-			this.addWall(walls[i]);
-		}
-	}
-
-	addTrimSprites(floorPlan) {
-		const trims =  TrimFactory.generate({
-			floorPlan
-		});
-		for (var i = trims.length - 1; i >= 0; i--) {
-			this.addChild(trims[i]);
-		}
-	}
-
-	addVases(floorPlan, params) {
-		const spaceAround = new Vector2(gridCells(3), gridCells(3));
-		const spot = this.findSpotOnFloor(spaceAround);
-		if (spot === undefined) return;
-		spot.x += gridCells(1);
-		spot.y += gridCells(1);
-		this.addGameObject(new Vase(spot.x, spot.y, undefined, params.seed));
-	}
-
-	addPictures(params) {
-		const spot = this.findRandomWallSpot(this.seed, this.wallSprites, this.gameObjects);
-		if (spot === undefined) return;
-		this.addGameObject(new Picture(spot.x, spot.y, undefined, params.seed));
-	}
-
-	addTelevisions(params) {
-		const spaceAround = new Vector2(gridCells(2), gridCells(1));
-		const spot = this.findRandomWallSpot(this.seed, this.wallSprites, this.gameObjects, spaceAround);
-		if (spot === undefined) return;
-		this.addGameObject(new Television(spot.x, spot.y, undefined, params.seed));
-	}
-
-	addBookshelves(params) {
-		const spaceAround = new Vector2(gridCells(4), gridCells(3));
-		const spot = this.findSpotOnFloor(spaceAround);
-		if (spot === undefined) return;
-		spot.x += gridCells(1);
-		spot.y += gridCells(1);
-		this.addGameObject(new Bookshelf(spot.x, spot.y, undefined, params.seed));
-	}
-
-	addDrawers(params) {
-		// console.log(this, this.seed, this.floors, this.gameObjects, gridCells(3));
-		const spaceAround = new Vector2(gridCells(4), gridCells(3));
-		const spot = this.findSpotOnFloor(spaceAround);
-		if (spot === undefined) return;
-		spot.x += gridCells(1);
-		spot.y += gridCells(1);
-		this.addGameObject(new Drawer(spot.x, spot.y, undefined, params.seed));
-	}
-
 	getOrientation(x, y, floorPlan) {
 		return OrientationFactory.getOrientation(x, y, floorPlan);
 	}
@@ -371,8 +277,7 @@ export class DrunkardWalkLevel extends Level {
 		events.on("HERO_EXIT", this, (exit) => {
 			if (exit.position.matches(this.caveExitPosition)) {
 				events.emit("CHANGE_LEVEL", this.getHome())
-			}
-			if (exit.position.matches(this.drunkWalkExitPosition)) {
+			} else if (exit.position.matches(this.drunkWalkExitPosition)) {
 				events.emit("CHANGE_LEVEL", this.getNextLevel());	
 			}
 		});

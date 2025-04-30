@@ -1,4 +1,4 @@
-import {GameObject} from "../../GameObject.js";
+import {HudGameObject} from "../../HudGameObject.js";
 import {Vector2} from "../../Vector2.js";
 import {Sprite} from '../../Sprite.js';
 import {moveTowards} from '../../helpers/Move.js';
@@ -8,7 +8,7 @@ import {gridCells, GRID_SIZE, isSpaceFree} from '../../helpers/Grid.js'
 import {events} from '../../Events.js';
 
 
-export class TextBox extends GameObject {
+export class TextBox extends HudGameObject {
 	constructor() {
 		super({
 			position: new Vector2(32, 112)
@@ -19,7 +19,6 @@ export class TextBox extends GameObject {
 			resource: resources.images.textBox,
 			frameSize: new Vector2(256, 64)
 		});
-		// this.addChild
 	}
 
 	drawImage(ctx, drawPosX, drawPosY) {

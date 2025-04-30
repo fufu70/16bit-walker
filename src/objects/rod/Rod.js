@@ -13,6 +13,7 @@ export class Rod extends GameObject {
 		super({
 			position: new Vector2(x, y)
 		});
+		this.drawLayer = 'ROD';
 
 		const sprite = new Sprite({
 			resource: resources.images.rod,

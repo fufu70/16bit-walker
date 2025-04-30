@@ -1,4 +1,4 @@
-import {DrunkardWalkLevel} from './DrunkardWalkLevel.js';
+import {DrunkRoomLevel} from './DrunkRoomLevel.js';
 import {QuestionRod} from '../objects/rod/QuestionRod.js';
 import {NpcFactory} from '../objects/npc/NpcFactory.js';
 import {gridCells, GRID_SIZE, isSpaceFree} from '../helpers/Grid.js';
@@ -8,7 +8,7 @@ import {OutdoorLevel1} from './OutdoorLevel1.js';
 import {events} from '../Events.js';
 import {resources} from '../Resources.js';
 
-export class QuestionsLevel extends DrunkardWalkLevel {
+export class QuestionsLevel extends DrunkRoomLevel {
 	constructor(params={}) {
 		try {
 			super({

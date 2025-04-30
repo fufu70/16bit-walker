@@ -24,6 +24,8 @@ import {
 	SYMBOLS,
 	HOLIDAYS,
 } from './constants/CivicsQuestions.js';
+import {DrunkOutdoorLevel} from './DrunkOutdoorLevel.js';
+import {Tree} from '../objects/outdoors/Tree.js';
 
 
 const DEFAULT_HERO_POSITION = new Vector2(gridCells(6), gridCells(5));
@@ -31,6 +33,7 @@ const CAVE_EXIT = new Vector2(gridCells(6), gridCells(3));
 const MODERN_INTERIOR_EXIT = new Vector2(gridCells(11), gridCells(2));
 const INTERIOR_EXIT = new Vector2(gridCells(14), gridCells(3));
 const QUESTIONS_EXIT = new Vector2(gridCells(3), gridCells(6));
+const OUTDOOR_LEVEL_EXIT = new Vector2(gridCells(8), gridCells(6));
 
 
 export class OutdoorLevel1 extends Level {
@@ -39,12 +42,14 @@ export class OutdoorLevel1 extends Level {
 		this.params = params;
 		this.background = new Sprite({
 			resource: resources.images.sky,
-			frameSize: new Vector2(320, 180)
+			frameSize: new Vector2(320, 180),
+			alwaysRender: true
 		});
 
 		const groundSprite = new Sprite({
 			resource: resources.images.ground,
-			frameSize: new Vector2(320, 180)
+			frameSize: new Vector2(320, 180),
+			alwaysRender: true
 		});
 		groundSprite.drawLayer = "FLOOR";
 		this.addChild(groundSprite);
@@ -56,6 +61,7 @@ export class OutdoorLevel1 extends Level {
 		this.addChild(new Exit(MODERN_INTERIOR_EXIT.x, MODERN_INTERIOR_EXIT.y));
 		this.addChild(new Exit(INTERIOR_EXIT.x, INTERIOR_EXIT.y));
 		this.addChild(new Exit(QUESTIONS_EXIT.x, QUESTIONS_EXIT.y));
+		this.addChild(new Exit(OUTDOOR_LEVEL_EXIT.x, OUTDOOR_LEVEL_EXIT.y));
 
 		const heroStart = params.heroPosition ?? DEFAULT_HERO_POSITION;
 
@@ -72,8 +78,39 @@ export class OutdoorLevel1 extends Level {
 		this.walls.add(`128, 80`); // water
 		this.walls.add(`144, 80`); // water
 		this.walls.add(`160, 80`); // water
+
+		this.addForest(new Vector2(gridCells(12), gridCells(4)), new Vector2(gridCells(15), gridCells(6)), 30);
 	}
 
+	addForest(fromPosition, toPosition, trees) {
+
+		this.addChild(new Tree(fromPosition.x, fromPosition.y));
+		this.addChild(new Tree(toPosition.x, fromPosition.y));
+		const depthX = toPosition.x - fromPosition.x;
+		const depthY = toPosition.y - fromPosition.y;
+		const depthYMap = new Map();
+		for (var i = 0; i < trees; i++) {
+
+			const randomX = Math.floor(Math.random() * depthX);
+			const randomY = Math.floor(Math.random() * depthY);
+			this.addChild(new Tree(
+				fromPosition.x, fromPosition.y + randomY, 
+				Math.floor(Math.random() * depthX), 
+				0)
+			);
+		}
+		this.addChild(new Tree(fromPosition.x, toPosition.y));
+		this.addChild(new Tree(toPosition.x, toPosition.y));
+		this.addForestWalls(fromPosition, toPosition);
+	}
+
+	addForestWalls(fromPosition, toPosition) {
+		for (var x = fromPosition.x; x <= toPosition.x; x += gridCells(1)) {
+			for (var y = fromPosition.y; y <= toPosition.y; y += gridCells(1)) {
+				this.walls.add(`${x}, ${y}`);
+			}
+		}
+	}
 
 	ready() {
 		events.on("HERO_EXIT", this, (exit) => {
@@ -81,6 +118,9 @@ export class OutdoorLevel1 extends Level {
 				events.emit("CHANGE_LEVEL", new CaveLevel1({
 					heroPosition: new Vector2(gridCells(4), gridCells(5))
 				}))
+			}
+			if (exit.position.matches(OUTDOOR_LEVEL_EXIT)) {
+				events.emit("CHANGE_LEVEL", new DrunkOutdoorLevel())
 			}
 			if (exit.position.matches(QUESTIONS_EXIT)) {
 				const seed1 = Math.random();
