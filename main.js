@@ -193,6 +193,8 @@ const draw = () => {
 	// restore the original state
 	ctx.restore();
 
+	updateFPS();
+
 	mainScene.drawForeground(ctx);
 }
 

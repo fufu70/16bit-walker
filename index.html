@@ -8,6 +8,160 @@
     <title>Sprite Sheet Demo</title>
   </head>
   <body>
+    <script type="text/javascript">
+      var capturedConsole = [];
+      let pressedKeys = {};
+
+
+      var consoleElement = document.createElement('div');
+      consoleElement.className = 'console';
+      var fpsElement = document.createElement('div');
+      fpsElement.className = 'console-fps';
+      fpsElement.innerText = "FPS: ";
+      var consoleOutputElement = document.createElement('div');
+      consoleOutputElement.className = 'console-output';
+      var inputFocused = false;
+      var input = document.createElement('div');
+      input.contentEditable = "true";
+      input.setAttribute('spellcheck', 'false');
+      input.setAttribute('autocorrect', 'off');
+      input.setAttribute('autocapitalize', 'off');
+      input.className = 'console-input';
+      input.innerHTML = '<br>';
+      input.onblur = () => {
+        this.inputFocused = false;
+      };
+      input.onclick = () => {
+        this.inputFocused = true;
+      };
+      consoleElement.appendChild(input);
+      consoleElement.appendChild(consoleOutputElement);
+      consoleElement.appendChild(fpsElement);
+      document.body.appendChild(consoleElement);
+
+      var isConsoleOutputShowing = true;
+      var toggleConsoleOuputDisplay = () => {
+        isConsoleOutputShowing = !isConsoleOutputShowing;
+        document.querySelector('.console').style.display = isConsoleOutputShowing ? 'block' : 'none';
+      }
+
+      var toggleConsoleFocus = () => {
+        if (!inputFocused) {
+          inputFocused = true;
+          document.querySelector('.console-input').focus(); 
+        } else {
+          document.querySelector('.console-input').blur();
+        }
+      }
+
+      var evalInput = () => {
+        try {
+          const text = document.querySelector('.console-input').innerText;
+          if (text == 'clear') {
+            capturedConsole = [];
+            renderConsole();
+          } else {
+            console.log(window.eval(text));  
+          }
+        } catch (error) {
+          console.error(error);
+        }
+        setTimeout(() => {
+          document.querySelector('.console-input').innerHTML = '<br>';
+        }, 1);
+      }
+
+      var lastTime = window.performance.now();
+      var fpsArr = [];
+      var fpsIndex = 0;
+      var updateFPS = () => {
+        var fps =  Math.ceil(1000 / (window.performance.now() - lastTime));
+        fpsIndex ++;
+        if (fpsIndex == 60) {
+          fpsIndex = 0;
+        }
+
+        fpsArr[fpsIndex] = fps;
+        var avgFps = Math.ceil(fpsArr.reduce((prev, curr) => {
+          return curr + prev;
+        }, 0) / 60);
+        document.querySelector('.console-fps').innerText = "FPS: " + (avgFps);
+        lastTime = window.performance.now();
+      }
+
+
+      document.addEventListener('keydown', function(event) {
+        pressedKeys[event.code] = true; // Add the physical key code
+
+        // Check for Ctrl + S combination on keydown
+        if (pressedKeys['ControlLeft'] && pressedKeys['KeyK'] && pressedKeys['KeyC']) {
+          toggleConsoleFocus();
+        } else  if (pressedKeys['ControlLeft'] && pressedKeys['KeyK']) {
+          toggleConsoleOuputDisplay();
+        } else if (pressedKeys['Enter']) {
+          evalInput();
+        }
+      });
+
+      document.addEventListener('keyup', function(event) {
+        pressedKeys[event.code] = false; // Remove the released key
+      });
+
+      var updateConsole = function(type, args) {
+        capturedConsole.push({
+          time: new Date().valueOf(),
+          type: type, 
+          args: Array.from(args)
+        });
+        renderConsole();
+      }
+
+      var renderConsole = () => {
+        const consoleOutput = document.querySelector('.console-output');
+        document.querySelector('.console-output').innerHTML = "";
+        capturedConsole.sort((a, b) => {
+          return b.time - a.time
+        }).map(log => {
+          elem = document.createElement("div");
+          elem.className = "console-output-" + log.type;
+          elem.innerHTML = '<span>' + JSON.stringify(log.args) + '</span>';
+          return elem;
+        }).forEach(elem => {
+          consoleOutput.appendChild(elem);
+        });
+      }
+
+      var originalLog = console.log;
+      console.log = function(message) {
+          updateConsole("log", arguments);
+          originalLog.apply(console, arguments); // Call the original console.log
+      };
+
+
+      var originalWarn = console.warn;
+      console.warn = function(message) {
+          updateConsole("warn", arguments);
+          originalWarn.apply(console, arguments); // Call the original console.log
+      };
+
+      var originalError = console.error;
+      console.error = function(message) {
+          updateConsole("error", arguments);
+          originalError.apply(console, arguments); // Call the original console.log
+      };
+
+      var originalInfo = console.info;
+      console.info = function(message) {
+          updateConsole("info", arguments);
+          originalInfo.apply(console, arguments); // Call the original console.log
+      };
+
+      // var originalWindowError = window.onerror;
+      window.onerror = function(message) {
+          updateConsole("error", arguments);
+          // originalWindowError.apply(console, arguments); // Call the original console.log
+      };
+    </script>
     <canvas id="game-canvas" width="320" height="180"></canvas>
     <script type="module" src="./main.js"></script>
   </body>
