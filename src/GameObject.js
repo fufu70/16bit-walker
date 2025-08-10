@@ -4,6 +4,7 @@ import {GRID_SIZE} from './helpers/Grid.js'
 
 export class GameObject {
 	constructor({position, size, isSolid, alwaysRender}) {
+		this.uuid = crypto.randomUUID();
 		this.position = position ?? new Vector2(0, 0);
 		this.children = [];
 		this.parent = null;
@@ -64,7 +65,6 @@ export class GameObject {
 			a.drawLayer !== 'FLOOR' 
 			&& a.drawLayer !== 'EXIT' 
 		);
-
 
 		return [
 			...this.orderByVertical(floors),

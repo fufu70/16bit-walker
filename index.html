@@ -17,7 +17,7 @@
       consoleElement.className = 'console';
       var fpsElement = document.createElement('div');
       fpsElement.className = 'console-fps';
-      fpsElement.innerText = "FPS: ";
+      fpsElement.innerText = "";
       var consoleOutputElement = document.createElement('div');
       consoleOutputElement.className = 'console-output';
       var inputFocused = false;
@@ -39,7 +39,7 @@
       consoleElement.appendChild(fpsElement);
       document.body.appendChild(consoleElement);
 
-      var isConsoleOutputShowing = true;
+      var isConsoleOutputShowing = false;
       var toggleConsoleOuputDisplay = () => {
         isConsoleOutputShowing = !isConsoleOutputShowing;
         document.querySelector('.console').style.display = isConsoleOutputShowing ? 'block' : 'none';
@@ -82,10 +82,12 @@
         }
 
         fpsArr[fpsIndex] = fps;
-        var avgFps = Math.ceil(fpsArr.reduce((prev, curr) => {
-          return curr + prev;
-        }, 0) / 60);
-        document.querySelector('.console-fps').innerText = "FPS: " + (avgFps);
+        if (fpsArr.length === 60) {
+          var avgFps = Math.ceil(fpsArr.reduce((prev, curr) => {
+            return curr + prev;
+          }, 0) / 60);
+          document.querySelector('.console-fps').innerText = "FPS: " + (avgFps);
+        }
         lastTime = window.performance.now();
       }
 
@@ -98,7 +100,7 @@
           toggleConsoleFocus();
         } else  if (pressedKeys['ControlLeft'] && pressedKeys['KeyK']) {
           toggleConsoleOuputDisplay();
-        } else if (pressedKeys['Enter']) {
+        } else if (!pressedKeys['ShiftLeft'] && pressedKeys['Enter']) {
           evalInput();
         }
       });
